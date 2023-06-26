@@ -104,12 +104,12 @@ class DecisionTreeClassifier(Model):
         y_entropy, y_size = self.entropy(y), len(y)
         for feature_index in range(num_features):
             features = X[:,feature_index] 
-            possible_thresholds = np.unique(features)
-            # possible_thresholds = self.get_thresholds(features)
+            possible_thresholds = np.unique(features) #self.get_thresholds(features)
             for threshold in possible_thresholds:
                 left_indexs, right_indexs = self.split(features, threshold)
                 if len(left_indexs) == 0 or len(right_indexs) == 0:
                     continue
+                
                 left_y, right_y = y[left_indexs], y[right_indexs]
                 gain = self.info_gain_with_parent_entropy(y_entropy, y_size, left_y, right_y)
                 if gain > max_gain:
@@ -137,27 +137,29 @@ class DecisionTreeClassifier(Model):
         Computes the information gain value given [parent_entropy] value and parent size [n_parent]
         Note: Make sure that [left_y] and [right_y] are mutually exclusive brances from the parent
         """
-        w_left, w_right = len(left_y)/parent_size, len(right_y)/parent_size
+        w_left, w_right = len(left_y)/n_parent, len(right_y)/n_parent
         left_entropy, right_entropy = self.entropy(left_y), self.entropy(right_y)
         return parent_entropy -(w_left * left_entropy + w_right * right_entropy)
         
     
-    # def entropy(self, y): # - More Vesatile, but slower
-    #     _ , counts = np.unique(y, return_counts=True)
-    #     prob_features = counts / len(y)
-        
-    #     return np.sum([-prob * np.log2(prob) for prob in prob_features])
-    
-    def entropy(self, y: ArrayLike): # Only works with integers and float with 0 decimal points, but much more faster
+    def entropy(self, y: ArrayLike): 
         """
         Compute entropy value from [y]
         """
+        # Only support numerical values but faster than the method below
         hist = np.bincount(y.astype(int)) #should be integers, does not work with floats
-        ps = hist / len(y)
-        return  -np.sum([p * np.log(p) for p in ps if p > 0])
-     
+        prob_features = hist / len(y)
+        return  -np.sum([p * np.log2(p) for p in prob_features if p > 0])
+
+        # Alternative method
+        # Suports numerical and categorical values, but slower than the method above
+        
+        # _ , counts = np.unique(y, return_counts=True)
+        #prob_features = counts / len(y)  
+        # return np.sum([-prob * np.log2(prob) for prob in prob_features])
+        
     
-    def get_thresholds(self, X_columns: ArrayLike): # If variables are not numerical
+    def get_thresholds(self, X_columns: ArrayLike): 
         """
         Returns the unique threshold value of [X_columns]
         """
