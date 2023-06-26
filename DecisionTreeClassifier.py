@@ -69,6 +69,7 @@ class DecisionTreeClassifier(Model):
         for feature_index in range(num_features):
             features = X[:,feature_index] 
             possible_thresholds = np.unique(features)
+            # possible_thresholds = self.get_thresholds(features)
             for threshold in possible_thresholds:
                 left_indexs, right_indexs = self.split(features, threshold)
                 if len(left_indexs) == 0 or len(right_indexs) == 0:
@@ -109,6 +110,17 @@ class DecisionTreeClassifier(Model):
         hist = np.bincount(y.astype(int)) #should be integers, does not work with floats
         ps = hist / len(y)
         return  -np.sum([p * np.log(p) for p in ps if p > 0])
+     
+    
+    def get_thresholds(self, X_columns): # If variables are not numerical
+        ## if it is categorical
+        if np.dtype.name in ("object", "str", "string"): 
+            return np.unique(X_columns)
+        
+        ## if it is numerical
+        sorted_col = np.sort(X_columns)
+        avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
+        return avg_arr
         
     def fit(self, X, y): 
         self.root = self.build_tree(X, y)
