@@ -14,16 +14,16 @@ def split2(X_column, split_thresh):
 
 
 x_column = np.random.randint(1, 10000, (1000))
-print(type(x_column))
-# print(x_column)
+x_column2 = x_column.copy()
+
 start = time.time()
 for i in range(1000000):
-    split(x_column, 20)
+    np.power(x_column, 2)
 time_takem = time.time() - start
 print(f"first using list comprehension: {time_takem}")
 
 start = time.time()
 for i in range(1000000):
-    split2(x_column, 20)
+    x_column2
 time_takem = time.time() - start
 print(f"first using  argwhere: {time_takem}")
