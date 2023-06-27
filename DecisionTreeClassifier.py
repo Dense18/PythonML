@@ -131,7 +131,8 @@ class DecisionTreeClassifier(SupervisedModel):
         
         return parent_entropy - (w_left * left_entropy + w_right * right_entropy)
      
-    def info_gain_with_parent_entropy(self, parent_entropy: float, n_parent: int, left_y: ArrayLike, right_y: ArrayLike) -> float:
+    def info_gain_with_parent_entropy(self, parent_entropy: float, n_parent: int, 
+                                      left_y: ArrayLike, right_y: ArrayLike) -> float:
         """
         Computes the information gain value given [parent_entropy] value and parent size [n_parent]
         Note: Make sure that [left_y] and [right_y] are mutually exclusive brances from the parent
