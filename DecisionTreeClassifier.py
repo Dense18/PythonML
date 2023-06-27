@@ -189,13 +189,13 @@ class DecisionTreeClassifier(Model):
             raise SystemError("Classifier has not been fitted yet!")
         return np.array([self.traverse(x, self.root) for x in X])
     
-    def traverse(self, X: ArrayLike, node: Node): 
+    def traverse(self, row: ArrayLike, node: Node): 
         """
         Traverse down the tree based on the [node] and returns the class value 
         """
         if node.value != None:
             return node.value
-        return self.traverse(X, node.left) if X[node.feature_index] <= node.threshold \
-            else self.traverse(X, node.right)
+        return self.traverse(row, node.left) if row[node.feature_index] <= node.threshold \
+            else self.traverse(row, node.right)
     
     
