@@ -33,7 +33,6 @@ class DecisionTreeClassifier(Model):
     def __init__(self,
                  min_samples_split: int = 2,
                  max_depth: int = 2,
-                 n_features: Optional[int] = None
                  ):
         self.X = None
         self.y = None
@@ -52,7 +51,7 @@ class DecisionTreeClassifier(Model):
         
         ## Decision Node
         if num_samples >= self.min_samples_split and cur_depth <= self.max_depth and n_labels != 1:
-            feature_index, threshold, gain, left_indexs, right_indexs = self.best_split(X, y, num_samples, num_features)
+            feature_index, threshold, gain, left_indexs, right_indexs = self.best_split(X, y, num_features)
             if gain < 0:
                 raise ValueError("Info gain cannot be negative!")
             left = self.build_tree(X[left_indexs,:],y[left_indexs], cur_depth + 1)
@@ -82,7 +81,7 @@ class DecisionTreeClassifier(Model):
         right_idxs = np.argwhere(feature_data > threshold).flatten()
         return left_idxs, right_idxs
     
-    def best_split(self, X: ArrayLike, y: ArrayLike, num_samples: int, num_features: int):
+    def best_split(self, X: ArrayLike, y: ArrayLike, num_features: int):
         """
         Returns the best split information based on the dataset ([X], [Y])
         
