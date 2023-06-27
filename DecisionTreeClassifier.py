@@ -1,4 +1,4 @@
-from Model import Model
+from Model import SupervisedModel
 import numpy as np
 import math
 from collections import Counter
@@ -26,7 +26,7 @@ class Node:
         """
         return self.value != None
     
-class DecisionTreeClassifier(Model):
+class DecisionTreeClassifier(SupervisedModel):
     """
         Decision Tree Classifier. Only supports numerical values with numpy array inputs.
     """
