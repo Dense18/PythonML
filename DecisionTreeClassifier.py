@@ -69,17 +69,17 @@ class DecisionTreeClassifier(Model):
         """
         return Counter(y).most_common(1)[0][0]
 
-    def split(self, X_column: ArrayLike, threshold):
+    def split(self, feature_data: ArrayLike, threshold):
         """
-        Returns the left and right indexes of [X_column] after a split based on the [threshold] 
+        Returns the left and right indexes of [feature_data] after a split based on the [threshold] 
         """
         ## Categorial variable
-        # left_idxs = np.argwhere(X_column == split_thresh).flatten()
-        # right_idxs = np.argwhere(X_column != split_thresh).flatten()
+        # left_idxs = np.argwhere(feature_data == split_thresh).flatten()
+        # right_idxs = np.argwhere(feature_data != split_thresh).flatten()
         
         ## Continuous variable
-        left_idxs = np.argwhere(X_column <= threshold).flatten()
-        right_idxs = np.argwhere(X_column > threshold).flatten()
+        left_idxs = np.argwhere(feature_data <= threshold).flatten()
+        right_idxs = np.argwhere(feature_data > threshold).flatten()
         return left_idxs, right_idxs
     
     def best_split(self, X: ArrayLike, y: ArrayLike, num_samples: int, num_features: int):
@@ -103,10 +103,10 @@ class DecisionTreeClassifier(Model):
         
         y_entropy, y_size = self.entropy(y), len(y)
         for feature_index in range(num_features):
-            features = X[:,feature_index] 
-            possible_thresholds = np.unique(features) #self.get_thresholds(features)
+            feature_data = X[:,feature_index] 
+            possible_thresholds = np.unique(feature_data) #self.get_thresholds(features)
             for threshold in possible_thresholds:
-                left_indexs, right_indexs = self.split(features, threshold)
+                left_indexs, right_indexs = self.split(feature_data, threshold)
                 if len(left_indexs) == 0 or len(right_indexs) == 0:
                     continue
                 
@@ -159,16 +159,16 @@ class DecisionTreeClassifier(Model):
         # return np.sum([-prob * np.log2(prob) for prob in prob_features])
         
     
-    def get_thresholds(self, X_columns: ArrayLike): 
+    def get_thresholds(self, feature_data: ArrayLike): 
         """
-        Returns the unique threshold value of [X_columns]
+        Returns the unique threshold value of [feature_data]
         """
         ## if it is categorical
         # if np.dtype.type in (np.string_, np.object_): # 
-        #     return np.unique(X_columns)
+        #     return np.unique(feature_data)
         
         ## if it is numerical
-        sorted_col = np.sort(X_columns)
+        sorted_col = np.sort(feature_data)
         avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
         return avg_arr
         
