@@ -176,6 +176,9 @@ class DecisionTreeClassifier(Model):
         """
         Builds a decision tree classifier from the training set ([X],[y]) 
         """
+        if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
+            X, y = np.array(X), np.array(y)
+            
         self.root = self.build_tree(X, y)
         
     def predict(self, X: ArrayLike):
