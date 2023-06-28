@@ -2,6 +2,7 @@ from Model import UnSupervisedModel
 from collections import Counter
 import numpy as np
 from numpy.typing import ArrayLike
+from utils import most_common_label
 
 class KNeighborsClassifier(UnSupervisedModel):
     """Classifier implementing  k-nearest neighbors vote"""
@@ -37,10 +38,7 @@ class KNeighborsClassifier(UnSupervisedModel):
         dist_list = [self.dist_func(x, instance) for instance in self.X]
         sorted_indexs = np.argsort(dist_list)[:self.n_neighbors]
         y_values = self.y[sorted_indexs]
-        return self.most_common_label(y_values)
-    
-    def most_common_label(self, y: ArrayLike):
-        return Counter(y).most_common(1)[0][0]
+        return most_common_label(y_values)
 
     def predict(self, X: ArrayLike):
         return np.array([self._predict(x) for x in X])

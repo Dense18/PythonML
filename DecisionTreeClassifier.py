@@ -4,7 +4,8 @@ import math
 from collections import Counter
 from  numpy.typing import ArrayLike
 from typing import Optional
-
+from scipy import stats as st
+from utils import most_common_label
 class Node:
     """
     A single Node instance of the Decision Tree
@@ -59,14 +60,17 @@ class DecisionTreeClassifier(SupervisedModel):
             return Node(feature_index, threshold, left, right, gain)
             
         ## Leaf Node
-        leaf_value = self.most_common_label(y)
+        leaf_value = most_common_label(y) #self.most_common_label(y)
         return Node(value = leaf_value)
     
-    def most_common_label(self, y: ArrayLike):
-        """
-        Returns the most common label from feature [y]
-        """
-        return Counter(y).most_common(1)[0][0]
+    # def most_common_label(self, y: ArrayLike):
+    #     """
+    #     Returns the most common label from feature [y]
+    #     """
+    #     return Counter(y).most_common(1)[0][0]
+    #     # return st.mode(y, keepdims = False).mode
+    #     # return np.bincount(y).argmax()
+        
 
     def split(self, feature_data: ArrayLike, threshold):
         """
