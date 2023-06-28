@@ -60,7 +60,7 @@ class DecisionTreeClassifier(SupervisedModel):
             return Node(feature_index, threshold, left, right, gain)
             
         ## Leaf Node
-        leaf_value = most_common_label(y) #self.most_common_label(y)
+        leaf_value = most_common_label(y)
         return Node(value = leaf_value)
         
     def split(self, feature_data: ArrayLike, threshold):
