@@ -130,6 +130,8 @@ class DecisionTreeClassifier(SupervisedModel):
                                       left_y: ArrayLike, right_y: ArrayLike) -> float:
         """
         Computes the information gain value given [parent_entropy] value and parent size [n_parent]
+        Much more efficient than info_gain(...) counterpart
+        
         Note: Make sure that [left_y] and [right_y] are mutually exclusive brances from the parent
         """
         w_left, w_right = len(left_y)/n_parent, len(right_y)/n_parent
