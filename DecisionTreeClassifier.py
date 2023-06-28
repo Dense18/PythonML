@@ -5,7 +5,8 @@ from collections import Counter
 from  numpy.typing import ArrayLike
 from typing import Optional
 from scipy import stats as st
-from utils import most_common_label
+from utils.utils import most_common_label
+
 class Node:
     """
     A single Node instance of the Decision Tree

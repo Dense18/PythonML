@@ -2,7 +2,8 @@ from Model import UnSupervisedModel
 from collections import Counter
 import numpy as np
 from numpy.typing import ArrayLike
-from utils import most_common_label
+import utils.distUtil as distUtil
+from utils.utils import most_common_label
 
 class KNeighborsClassifier(UnSupervisedModel):
     """Classifier implementing  k-nearest neighbors vote"""
@@ -13,7 +14,7 @@ class KNeighborsClassifier(UnSupervisedModel):
         self.n_neighbors = n_neighbors
         self.algorithm = algorithm
         
-        self.algo_dict = {"euclidean": self.euclidean, "manhattan": self.manhattan}
+        self.algo_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.algo_dict[algorithm]
     
     def fit(self, X: ArrayLike, y: ArrayLike):
@@ -21,18 +22,6 @@ class KNeighborsClassifier(UnSupervisedModel):
             X, y = np.array(X), np.array(y)
         self.X = X
         self.y = y
-    
-    def euclidean(self, x1: ArrayLike, x2: ArrayLike) -> float:
-        """
-        Calculates the euclidean distance between [X1] and [X2]
-        """
-        return np.sqrt(np.sum((x1 - x2) ** 2))
-    
-    def manhattan(self, x1: ArrayLike, x2: ArrayLike):
-        """
-        Calculates the euclidean distance between [X1] and [X2]
-        """
-        return np.sqrt(np.absolute(np.sum((x1 - x2))))
     
     def _predict(self, x: ArrayLike):
         dist_list = [self.dist_func(x, instance) for instance in self.X]
