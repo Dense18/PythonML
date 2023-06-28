@@ -62,16 +62,7 @@ class DecisionTreeClassifier(SupervisedModel):
         ## Leaf Node
         leaf_value = most_common_label(y) #self.most_common_label(y)
         return Node(value = leaf_value)
-    
-    # def most_common_label(self, y: ArrayLike):
-    #     """
-    #     Returns the most common label from feature [y]
-    #     """
-    #     return Counter(y).most_common(1)[0][0]
-    #     # return st.mode(y, keepdims = False).mode
-    #     # return np.bincount(y).argmax()
         
-
     def split(self, feature_data: ArrayLike, threshold):
         """
         Returns the left and right indexes of [feature_data] after a split based on the [threshold] 
