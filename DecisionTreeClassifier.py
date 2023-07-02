@@ -181,7 +181,7 @@ class DecisionTreeClassifier(SupervisedModel):
         
     def predict(self, X: ArrayLike):
         """
-        Predicts class value for X
+        Predicts class value for [X]
         """
         if self.root == None:
             raise SystemError("Classifier has not been fitted yet!")
