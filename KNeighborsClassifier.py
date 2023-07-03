@@ -8,14 +8,16 @@ from utils.utils import most_common_label
 class KNeighborsClassifier(SupervisedModel):
     """Classifier implementing  k-nearest neighbors vote"""
     
-    def __init__(self, n_neighbors:int = 5, algorithm = "euclidean"):
+    def __init__(self, 
+                 n_neighbors: int = 5, 
+                 dist_metric: str = "euclidean"):
         self.X = None
         self.y = None
         self.n_neighbors = n_neighbors
-        self.algorithm = algorithm
         
-        self.algo_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
-        self.dist_func = self.algo_dict[algorithm]
+        self.dist_metric = dist_metric
+        self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
+        self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
     
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
@@ -30,7 +32,7 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Predicts class value for instance [x]
         """
-        dist_list = [self.dist_func(x, instance) for instance in self.X]
+        dist_list = np.array([self.dist_func(x, instance) for instance in self.X])
         sorted_indexs = np.argsort(dist_list)[:self.n_neighbors]
         y_values = self.y[sorted_indexs]
         return most_common_label(y_values)

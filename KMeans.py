@@ -1,17 +1,32 @@
 import numpy as np
 from numpy.typing import ArrayLike
 from Model import UnSupervisedModel
-from utils.distUtil import euclidean
+import utils.distUtil as distUtil
 
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from IPython.display import clear_output
 
 class KMeans(UnSupervisedModel):
+    """
+    K-means Clustering
+    """
     def __init__(self, 
+                 init = "k++",
                  n_clusters: int = 3,
-                 max_iterations: int = 1) -> None:
+                 max_iterations: int = 1,
+                 dist_metric: str = "euclidean") -> None:
+        
         self.n_clusters = n_clusters
         self.max_iterations = max_iterations
+        
+        self.init = init
+        self.init_dict = {"random": self.randomize_centroids, "k++": self.k_plus_centroids}
+        self.init_func = self.init_dict.get(init, "k++")
+        
+        self.dist_metric = dist_metric
+        self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
+        self.dist_func = self.dist_dict[dist_metric]
         
         self.labels = None
         self.centroids = None
@@ -40,7 +55,9 @@ class KMeans(UnSupervisedModel):
             
             ## Update Centroid based on the mean of the the points on each cluster
             for i in range(self.n_clusters):
-                centroids[i, :] = np.mean(X[cluster_num == i], axis =0)
+                cluster_row = X[cluster_num == i] 
+                # centroids[i, :] = np.mean(cluster_row, axis =0) if len(cluster_row) != 0 else centroids[i, :]
+                centroids[i, :] = np.mean(cluster_row, axis =0) 
             
             if plot:
                 self.plot_clusters(cluster_num, centroids, iter_count)
@@ -53,31 +70,55 @@ class KMeans(UnSupervisedModel):
         self.centroids = centroids
         self.labels = cluster_num
     
-    def get_distances(self, X, centroids):
+    def init_centroids(self):
+        """
+        Initialize centroids location based on init parameter given on constructor
+        """
+        return self.init_dict[self.init]
+    
+    def randomize_centroids(self):
+        """
+        Initialize centroids location using randomization
+        """
+        return np.random.uniform(np.amin(self.X, axis = 0), 
+                                 np.amax(self.X, axis = 0), 
+                                 size = (self.n_clusters, self.X.shape[1])
+                                )
+    
+    def k_plus_centroids(self):
+        """
+        Initialized centroids location using k-means++
+        """
+        pass
+        
+    
+    def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
         Returns euclidean distances between [X] and centroids
         """
         dist = np.zeros((X.shape[0], self.n_clusters))
         for i in range(self.n_clusters):
-            dist[:, i] = np.sqrt(np.sum((X - centroids[i]) ** 2, axis=1))
+            # dist[:, i] = np.sqrt(np.sum((X - centroids[i]) ** 2, axis=1))
+            dist[:, i] = self.dist_func(X, centroids[i], axis = 1)
         return dist
     
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
         """
-        Plots a 2D kmeans graph after applying PCA on the current [iteration]
+        Plots a 2D kmeans graph after applying PCA on the current [iteration].
+        
+        Recommended to only use function on simple datasets.
         """
         pca = PCA(n_components=2)
         data_pca = pca.fit_transform(self.X)
         centroids_pca = pca.transform(centroids)
         
-        plt.figure()
         plt.title(f"Iteration: {iteration}")
         plt.scatter(data_pca[:, 0], data_pca[:, 1], c = labels)
         plt.scatter(centroids_pca[:, 0], centroids_pca[:, 1], 
                     c = range(self.n_clusters), edgecolors="black", 
                     marker = "*", s = 200)
         plt.show()
-    
+        
     def predict(self, X: ArrayLike):
         """
         Predicts class value for [X]
