@@ -196,4 +196,32 @@ class DecisionTreeClassifier(SupervisedModel):
         return self.traverse(instance, node.left) if instance[node.feature_index] <= node.threshold \
             else self.traverse(instance, node.right)
     
+    def print_tree(self, spacing = 3, max_depth = 10):
+        """
+        Prints a text representation of the fitted decision tree
+        """
+        if self.root == None:
+            print("Decision Tree has not been fitted")
+            return
+
+        def _print_tree(node: Node, depth = 1):
+            indent = ("|" + " " * spacing) * depth
+            indent = indent[:-spacing] + "-" * spacing
+            
+            if depth > max_depth + 1:
+                print(f"{indent} Trunctuated branch")
+                return 
+            if node.value != None:
+                print(f"{indent} class: {node.value}")
+                return
+            print(f"{indent} feature_{node.feature_index} <= {node.threshold}")
+            _print_tree(node.left, depth = depth + 1)
+            print(f"{indent} feature_{node.feature_index} >  {node.threshold}")
+            _print_tree(node.right, depth = depth  + 1)
+        
+        _print_tree(self.root)
+        
+        
+        
+        
     
