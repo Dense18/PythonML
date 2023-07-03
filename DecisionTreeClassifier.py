@@ -196,10 +196,12 @@ class DecisionTreeClassifier(SupervisedModel):
         return self.traverse(instance, node.left) if instance[node.feature_index] <= node.threshold \
             else self.traverse(instance, node.right)
     
-    def print_tree(self, spacing = 3, max_depth = 10):
+    def print_tree(self, spacing = 3, max_depth = 10, export = False):
         """
-        Prints a text representation of the fitted decision tree
+        Prints a text representation of the fitted decision tree. 
+        Set "export = True" to return a tree str representation
         """
+        
         if self.root == None:
             print("Decision Tree has not been fitted")
             return
@@ -208,19 +210,28 @@ class DecisionTreeClassifier(SupervisedModel):
             indent = ("|" + " " * spacing) * depth
             indent = indent[:-spacing] + "-" * spacing
             
+            output = ""
             if depth > max_depth + 1:
-                print(f"{indent} Trunctuated branch")
-                return 
+                output += f"{indent} Trunctuated branch\n"
+                return output
             if node.value != None:
-                print(f"{indent} class: {node.value}")
-                return
-            print(f"{indent} feature_{node.feature_index} <= {node.threshold}")
-            _print_tree(node.left, depth = depth + 1)
-            print(f"{indent} feature_{node.feature_index} >  {node.threshold}")
-            _print_tree(node.right, depth = depth  + 1)
+                output += f"{indent} class: {node.value}\n"
+                return output
+            
+            output += f"{indent} feature_{node.feature_index} <= {node.threshold}\n"
+            output += _print_tree(node.left, depth = depth + 1)
+            
+            output += f"{indent} feature_{node.feature_index} >  {node.threshold}\n"
+            output +=  _print_tree(node.right, depth = depth + 1)
+            
+            return output
         
-        _print_tree(self.root)
-        
+        output = _print_tree(self.root)
+        return output if export else print(output)
+    
+    def __str__(self) -> str:
+        return self.print_tree(export = True)
+
         
         
         
