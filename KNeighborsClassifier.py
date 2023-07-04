@@ -16,7 +16,7 @@ class KNeighborsClassifier(SupervisedModel):
                  ):
         
         self.validate(
-            n_neighbors=n_neighbors,
+            n_neighbors = n_neighbors,
         )
         
         self.X = None
@@ -26,14 +26,6 @@ class KNeighborsClassifier(SupervisedModel):
         self.dist_metric = dist_metric
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
-    
-    def validate(self, n_neighbors):
-        """
-        Validate provided arguments
-        """
-        if n_neighbors < 1:
-           raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")
-       
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
@@ -60,3 +52,12 @@ class KNeighborsClassifier(SupervisedModel):
         if self.X is None:
             raise NotFittedError("Classifier has not beed fiited yet!")
         return np.array([self._predict(x) for x in X])
+    
+    ####### Validation ######
+    
+    def validate(self, n_neighbors):
+        """
+        Validate provided arguments
+        """
+        if n_neighbors < 1:
+           raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")

@@ -12,13 +12,21 @@ class Node:
     """
     A single Node instance of the Decision Tree
     """
-    def __init__(self, feature_index = None, threshold = None, left = None, right = None, info_gain = None, *, value = None) -> None:
+    def __init__(self, 
+                 feature_index = None, 
+                 threshold = None,
+                 left = None, 
+                 right = None, 
+                 info_gain = None, 
+                 *, 
+                 value = None
+                 ) -> None:
         #Decision Node
         self.feature_index = feature_index
         self.threshold = threshold
         self.left = left
         self.right = right
-        self.info_gain = None
+        self.info_gain = info_gain
         
         #Leaf Node
         self.value = value
@@ -38,6 +46,12 @@ class DecisionTreeClassifier(SupervisedModel):
                  min_samples_split: int = 2,
                  max_depth: int = 2,
                  ):
+        
+        self.validate(
+            min_samples_split = min_samples_split,
+            max_depth = max_depth
+        )
+        
         self.X = None
         self.y = None
         
@@ -45,18 +59,36 @@ class DecisionTreeClassifier(SupervisedModel):
         
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
-
-    def validate(self, min_samples_split, max_depth):
+    
+    
+    def fit(self, X: ArrayLike, y: ArrayLike): 
         """
-        Validate provided arguments
+        Builds a decision tree classifier from the training set ([X],[y]) 
         """
-        
-        if min_samples_split <= 1:
-            raise ValueError(f"min_samples_split should be greater than 2. Got {min_samples_split} instead.")
-        
-        if max_depth < 0:
-            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")
-        
+        if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
+            X, y = np.array(X), np.array(y)
+            
+        self.root = self.build_tree(X, y)
+    
+    def traverse(self, instance: ArrayLike, node: Node): 
+        """
+        Traverse down the tree based on the [node] and returns the class value 
+        """
+        if node.value != None:
+            return node.value
+        return self.traverse(instance, node.left) if instance[node.feature_index] <= node.threshold \
+            else self.traverse(instance, node.right)
+    
+    def predict(self, X: ArrayLike):
+        """
+        Predicts class value for [X]
+        """
+        if self.root is None:
+            raise NotFittedError("Classifier has not been fitted yet!")
+        return np.array([self.traverse(x, self.root) for x in X])   
+    
+    ###### Tree building ######
+    
     def build_tree(self, X: ArrayLike, y: ArrayLike, cur_depth = 0) -> Node:
         """
         Builds the decision tree
@@ -129,6 +161,21 @@ class DecisionTreeClassifier(SupervisedModel):
                     
         return split_index, split_threshold, max_gain, best_left_idx, best_right_idx   
 
+    def get_thresholds(self, feature_data: ArrayLike): 
+        """
+        Returns the unique threshold value of [feature_data]
+        """
+        ## if it is categorical
+        # if np.dtype.type in (np.string_, np.object_): # 
+        #     return np.unique(feature_data)
+        
+        ## if it is numerical
+        sorted_col = np.sort(feature_data)
+        avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
+        return avg_arr
+    
+     ###### Calculation ######
+     
     def info_gain(self, parent_y: ArrayLike, left_y: ArrayLike, right_y: ArrayLike) -> float: 
         """
         Computes the information gain value
@@ -152,7 +199,6 @@ class DecisionTreeClassifier(SupervisedModel):
         left_entropy, right_entropy = self.entropy(left_y), self.entropy(right_y)
         return parent_entropy -(w_left * left_entropy + w_right * right_entropy)
         
-    
     def entropy(self, y: ArrayLike): 
         """
         Compute entropy value from [y]
@@ -168,46 +214,21 @@ class DecisionTreeClassifier(SupervisedModel):
         # _ , counts = np.unique(y, return_counts=True)
         #prob_features = counts / len(y)  
         # return np.sum([-prob * np.log2(prob) for prob in prob_features])
+           
+    ###### Validate ######
+
+    def validate(self, min_samples_split, max_depth):
+        """
+        Validate provided arguments
+        """
         
+        if min_samples_split <= 1:
+            raise ValueError(f"min_samples_split should be greater than 2. Got {min_samples_split} instead.")
+        
+        if max_depth < 0:
+            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")  
     
-    def get_thresholds(self, feature_data: ArrayLike): 
-        """
-        Returns the unique threshold value of [feature_data]
-        """
-        ## if it is categorical
-        # if np.dtype.type in (np.string_, np.object_): # 
-        #     return np.unique(feature_data)
-        
-        ## if it is numerical
-        sorted_col = np.sort(feature_data)
-        avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
-        return avg_arr
-        
-    def fit(self, X: ArrayLike, y: ArrayLike): 
-        """
-        Builds a decision tree classifier from the training set ([X],[y]) 
-        """
-        if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
-            X, y = np.array(X), np.array(y)
-            
-        self.root = self.build_tree(X, y)
-        
-    def predict(self, X: ArrayLike):
-        """
-        Predicts class value for [X]
-        """
-        if self.root is None:
-            raise NotFittedError("Classifier has not been fitted yet!")
-        return np.array([self.traverse(x, self.root) for x in X])
-    
-    def traverse(self, instance: ArrayLike, node: Node): 
-        """
-        Traverse down the tree based on the [node] and returns the class value 
-        """
-        if node.value != None:
-            return node.value
-        return self.traverse(instance, node.left) if instance[node.feature_index] <= node.threshold \
-            else self.traverse(instance, node.right)
+    ###### Text presentation ######
     
     def print_tree(self, spacing = 3, max_depth = 10, export = False):
         """

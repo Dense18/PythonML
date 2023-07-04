@@ -27,10 +27,10 @@ class KMeans(UnSupervisedModel):
 
         
         self.validate(
-            n_clusters=n_clusters,
-            n_init=n_init,
-            max_iterations=max_iterations,
-            tol=tol
+            n_clusters = n_clusters,
+            n_init = n_init,
+            max_iterations = max_iterations,
+            tol = tol
         )
         
         self.n_clusters = n_clusters
@@ -54,39 +54,7 @@ class KMeans(UnSupervisedModel):
         self.inertia = None
         
         self.n_iter = 0
-    
-    def validate(self, n_clusters, max_iterations, n_init, tol):
-        """
-        Validate provided arguments
-        """
-        if n_clusters < 1:
-            raise ValueError(f"n_cluster should be greater than 0. Got a value of {n_clusters} instead.")
-        
-        if max_iterations < 1:
-            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iterations} instead.")
-        
-        if n_init < 1:
-            raise ValueError(f"n_init should be greater than 0. Got a value of {n_init} instead.")
-        
-        if tol < 0:
-            raise ValueError(f"tol should be a positive number. Got a value of {tol} instead.")
-        
-    def fit(self, X: ArrayLike, plot = False):
-        """
-        Fits the model based on the training set [X] 
-        """
-        best_inertia = np.inf        
-        best_fit_return = None
-        
-        for _ in range(self.n_init):
-            fit_return = self._fit(X, plot)
-            
-            if fit_return[3] < best_inertia:
-                best_fit_return = fit_return
-                best_inertia = fit_return[3]
-        
-        self.n_iter, self.centroids, self.labels, self.inertia = best_fit_return
-    
+
     def _fit(self, X: ArrayLike, plot = False):
         """
         Helper function to perform Kmeans once
@@ -131,6 +99,40 @@ class KMeans(UnSupervisedModel):
         
         return n_iter, centroids, cluster_num, self.calc_inertia(X, cluster_num, centroids)
     
+    def fit(self, X: ArrayLike, plot = False):
+        """
+        Fits the model based on the training set [X] 
+        """
+        best_inertia = np.inf        
+        best_fit_return = None
+        
+        for _ in range(self.n_init):
+            fit_return = self._fit(X, plot)
+            
+            if fit_return[3] < best_inertia:
+                best_fit_return = fit_return
+                best_inertia = fit_return[3]
+        
+        self.n_iter, self.centroids, self.labels, self.inertia = best_fit_return
+    
+    def _predict(self, x: ArrayLike):
+        """
+        Predicts class value for instance [X]
+        """
+        dists = self.get_distances_oneD(x, self.centroids)
+        return np.argmin(dists)
+        
+    def predict(self, X: ArrayLike):
+        """
+        Predicts class value for [X]
+        """
+        if self.X is None:
+            raise NotFittedError("KMeans model has not been fitted yet!")
+        return np.array([self._predict(x) for x in X])    
+    
+    
+    ###### Centroid initialization ######
+    
     def init_centroids(self):
         """
         Initialize centroids location based on init parameter given on constructor.
@@ -168,6 +170,9 @@ class KMeans(UnSupervisedModel):
             
         return np.array(centroids)
     
+    
+    ###### Calculations ######
+    
     def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
         Returns distances between [X] and [centroids]
@@ -189,6 +194,15 @@ class KMeans(UnSupervisedModel):
         """
         return np.array([self.dist_func(x, centroids[i]) for i in range(len(centroids))])
     
+    def calc_inertia(self, X: ArrayLike, labels: ArrayLike, centroids: ArrayLike):
+        """
+        Calculates intertia, i.e, the WSS value
+        """
+        return np.sum(self.dist_func(X, centroids[labels], axis = 1))
+    
+    
+    ###### Plot ######
+    
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
         """
         Plots a 2D kmeans graph after applying PCA on the current [iteration].
@@ -206,23 +220,20 @@ class KMeans(UnSupervisedModel):
                     marker = "*", s = 200)
         plt.show()
     
-    def calc_inertia(self, X: ArrayLike, labels: ArrayLike, centroids: ArrayLike):
-        """
-        Calculates intertia, i.e, the WSS value
-        """
-        return np.sum(self.dist_func(X, centroids[labels], axis = 1))
+    ###### Validation ######
     
-    def _predict(self, x: ArrayLike):
+    def validate(self, n_clusters, max_iterations, n_init, tol):
         """
-        Predicts class value for instance [X]
+        Validate provided arguments
         """
-        dists = self.get_distances_oneD(x, self.centroids)
-        return np.argmin(dists)
+        if n_clusters < 1:
+            raise ValueError(f"n_cluster should be greater than 0. Got a value of {n_clusters} instead.")
         
-    def predict(self, X: ArrayLike):
-        """
-        Predicts class value for [X]
-        """
-        if self.X is None:
-            raise NotFittedError("KMeans model has not been fitted yet!")
-        return np.array([self._predict(x) for x in X])
+        if max_iterations < 1:
+            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iterations} instead.")
+        
+        if n_init < 1:
+            raise ValueError(f"n_init should be greater than 0. Got a value of {n_init} instead.")
+        
+        if tol < 0:
+            raise ValueError(f"tol should be a positive number. Got a value of {tol} instead.")
