@@ -1,5 +1,3 @@
-from _typeshed import SupportsWrite
-from abc import ABCMeta
 import numpy as np
 from numpy.typing import ArrayLike
 from Model import UnSupervisedModel
@@ -117,18 +115,32 @@ class KMeans(UnSupervisedModel):
             )
             
         return np.array(centroids)
-        
     
     def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
-        Returns distances between [X] and [centroids], where distance metric is determined in the constructor
+        Returns distances between [X] and [centroids]
         
         Returns in the form where row = instances in X, and col = centroids number.
         """
         n = len(centroids)
+        
         dist = np.zeros((X.shape[0], n))
         for i in range(n):
             dist[:, i] = self.dist_func(X, centroids[i], axis = 1)
+        return dist
+    
+    def get_distances_oneD(self, x: ArrayLike, centroids: ArrayLike):
+        """
+        Returns distances between instance [X] and [centroids]
+        
+        Returns in the form where col = centroids number.
+        """
+        
+        n = len(centroids)
+        
+        dist = np.zeros(n)
+        for i in range(n):
+             dist[i] = self.dist_func(x, centroids[i]) 
         return dist
     
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
@@ -152,12 +164,13 @@ class KMeans(UnSupervisedModel):
         """
         Predicts class value for instance [X]
         """
-        if self.centroids == None:
-            raise NotFittedError("KMeans model has not been fitted yet!")
-        dists = self.get_distances(x, self.centroids)
+        dists = self.get_distances_oneD(x, self.centroids)
+        return np.argmin(dists)
         
     def predict(self, X: ArrayLike):
         """
         Predicts class value for [X]
         """
+        if self.X is None:
+            raise NotFittedError("KMeans model has not been fitted yet!")
         return np.array([self._predict(x) for x in X])

@@ -184,7 +184,7 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Predicts class value for [X]
         """
-        if self.root == None:
+        if self.root is None:
             raise NotFittedError("Classifier has not been fitted yet!")
         return np.array([self.traverse(x, self.root) for x in X])
     

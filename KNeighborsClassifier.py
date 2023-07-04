@@ -42,6 +42,6 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Predicts class value for [X]
         """
-        if self.X == None or self.Y == None:
+        if self.X is None:
             raise NotFittedError("Classifier has not beed fiited yet!")
         return np.array([self._predict(x) for x in X])
