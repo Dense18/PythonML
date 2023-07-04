@@ -14,6 +14,11 @@ class KNeighborsClassifier(SupervisedModel):
                  *,
                  dist_metric: str = "euclidean"
                  ):
+        
+        self.validate(
+            n_neighbors=n_neighbors,
+        )
+        
         self.X = None
         self.y = None
         self.n_neighbors = n_neighbors
@@ -22,6 +27,14 @@ class KNeighborsClassifier(SupervisedModel):
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
     
+    def validate(self, n_neighbors):
+        """
+        Validate provided arguments
+        """
+        if n_neighbors < 1:
+           raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")
+       
+       
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fits the model based on the training set ([X], [y])

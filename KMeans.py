@@ -24,6 +24,14 @@ class KMeans(UnSupervisedModel):
                  random_seed: Optional[int] = None,
                  tol: float = 1e-4
                  ):
+
+        
+        self.validate(
+            n_clusters=n_clusters,
+            n_init=n_init,
+            max_iterations=max_iterations,
+            tol=tol
+        )
         
         self.n_clusters = n_clusters
         self.max_iterations = max_iterations
@@ -47,30 +55,21 @@ class KMeans(UnSupervisedModel):
         
         self.n_iter = 0
     
-    # def fit(self, X: ArrayLike, plot = False):
-    #     """
-    #     Fits the model based on the training set [X] 
-    #     """
-    #     best_n_iter = None
-    #     best_centroids = None
-    #     best_labels = None
-    #     best_interia = np.inf
+    def validate(self, n_clusters, max_iterations, n_init, tol):
+        """
+        Validate provided arguments
+        """
+        if n_clusters < 1:
+            raise ValueError(f"n_cluster should be greater than 0. Got a value of {n_clusters} instead.")
         
-    #     best_fit_return = None
+        if max_iterations < 1:
+            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iterations} instead.")
         
-    #     for _ in range(self.n_init):
-    #         n_iter, centroids, labels, intertia = self._fit(X, plot)
-    #         fit_return = self._fit(X, plot)
-    #         if intertia < best_interia:
-    #             best_n_iter = n_iter
-    #             best_centroids = centroids
-    #             best_labels = labels
-    #             best_interia = intertia
+        if n_init < 1:
+            raise ValueError(f"n_init should be greater than 0. Got a value of {n_init} instead.")
         
-    #     self.n_iter = best_n_iter
-    #     self.centroids = best_centroids
-    #     self.labels = best_labels
-    #     self.inertia = best_interia
+        if tol < 0:
+            raise ValueError(f"tol should be a positive number. Got a value of {tol} instead.")
         
     def fit(self, X: ArrayLike, plot = False):
         """
@@ -125,7 +124,7 @@ class KMeans(UnSupervisedModel):
                 self.plot_clusters(cluster_num, centroids, n_iter)
             
             ## Check convergence
-            if np.max(old_centroids - centroids) <= self.tol:
+            if np.abs(np.max(old_centroids - centroids)) <= self.tol:
                 break
             
             n_iter += 1

@@ -46,6 +46,17 @@ class DecisionTreeClassifier(SupervisedModel):
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
 
+    def validate(self, min_samples_split, max_depth):
+        """
+        Validate provided arguments
+        """
+        
+        if min_samples_split <= 1:
+            raise ValueError(f"min_samples_split should be greater than 2. Got {min_samples_split} instead.")
+        
+        if max_depth < 0:
+            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")
+        
     def build_tree(self, X: ArrayLike, y: ArrayLike, cur_depth = 0) -> Node:
         """
         Builds the decision tree
