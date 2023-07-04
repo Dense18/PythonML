@@ -1,3 +1,5 @@
+from _typeshed import SupportsWrite
+from abc import ABCMeta
 import numpy as np
 from numpy.typing import ArrayLike
 from Model import UnSupervisedModel
@@ -6,16 +8,21 @@ import utils.distUtil as distUtil
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from IPython.display import clear_output
+from typing import Optional
+
+from sklearn.utils.validation import NotFittedError
 
 class KMeans(UnSupervisedModel):
     """
-    K-means Clustering
+    K-means Clustering using lloyd's algorithm
     """
     def __init__(self, 
                  init = "k++",
                  n_clusters: int = 3,
                  max_iterations: int = 1,
-                 dist_metric: str = "euclidean") -> None:
+                 dist_metric: str = "euclidean",
+                 random_seed: Optional[int] = None,
+                 tol: float = 1e-4) -> None:
         
         self.n_clusters = n_clusters
         self.max_iterations = max_iterations
@@ -28,9 +35,15 @@ class KMeans(UnSupervisedModel):
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.dist_dict[dist_metric]
         
+        self.rng = np.random.default_rng(random_seed)
+        
+        self.tol = tol
+        
         self.labels = None
         self.centroids = None
-    
+        
+        self.iter_count = 0
+        
     def fit(self, X: ArrayLike, plot = False):
         """
         Fits the model based on the training set [X]
@@ -39,15 +52,12 @@ class KMeans(UnSupervisedModel):
             X = np.array(X)
         self.X = X
         
-        centroids = np.random.uniform(np.amin(X, axis = 0), 
-                                      np.amax(X, axis = 0), 
-                                      size = (self.n_clusters, X.shape[1])
-                                      )
+        centroids = self.k_plus_centroids()
         iter_count = 0
         cluster_num = np.zeros(X.shape[0]).astype(int)
         
         while iter_count < self.max_iterations:
-            old_cluster = cluster_num.copy()
+            old_centroids = centroids.copy()
             
             ## Assign Cluster
             distances = self.get_distances(X, centroids)
@@ -56,23 +66,26 @@ class KMeans(UnSupervisedModel):
             ## Update Centroid based on the mean of the the points on each cluster
             for i in range(self.n_clusters):
                 cluster_row = X[cluster_num == i] 
-                # centroids[i, :] = np.mean(cluster_row, axis =0) if len(cluster_row) != 0 else centroids[i, :]
-                centroids[i, :] = np.mean(cluster_row, axis =0) 
+                centroids[i, :] = np.mean(cluster_row, axis = 0) if len(cluster_row) != 0 else centroids[i, :]
             
             if plot:
                 self.plot_clusters(cluster_num, centroids, iter_count)
             
             ## Check convergence
-            if all(old_cluster == cluster_num):
+            if np.max(old_centroids - centroids) <= self.tol:
                 break
+            
             iter_count += 1
         
+        self.iter_count = iter_count
         self.centroids = centroids
         self.labels = cluster_num
     
     def init_centroids(self):
         """
-        Initialize centroids location based on init parameter given on constructor
+        Initialize centroids location based on init parameter given on constructor.
+        
+        Same as calling self.init_func
         """
         return self.init_dict[self.init]
     
@@ -89,16 +102,32 @@ class KMeans(UnSupervisedModel):
         """
         Initialized centroids location using k-means++
         """
-        pass
+        centroids = []
+        centroids.append(self.rng.choice(self.X))
+        
+        for _ in range(self.n_clusters - 1):
+            dists = self.get_distances(self.X, centroids)
+            dists = np.amin(dists, axis = 1)
+            
+            total_dist = np.sum(dists)
+            prob_dists = dists/total_dist
+            
+            centroids.append(
+                self.rng.choice(self.X, p = prob_dists)
+            )
+            
+        return np.array(centroids)
         
     
     def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
-        Returns euclidean distances between [X] and centroids
+        Returns distances between [X] and [centroids], where distance metric is determined in the constructor
+        
+        Returns in the form where row = instances in X, and col = centroids number.
         """
-        dist = np.zeros((X.shape[0], self.n_clusters))
-        for i in range(self.n_clusters):
-            # dist[:, i] = np.sqrt(np.sum((X - centroids[i]) ** 2, axis=1))
+        n = len(centroids)
+        dist = np.zeros((X.shape[0], n))
+        for i in range(n):
             dist[:, i] = self.dist_func(X, centroids[i], axis = 1)
         return dist
     
@@ -118,10 +147,17 @@ class KMeans(UnSupervisedModel):
                     c = range(self.n_clusters), edgecolors="black", 
                     marker = "*", s = 200)
         plt.show()
+    
+    def _predict(self, x: ArrayLike):
+        """
+        Predicts class value for instance [X]
+        """
+        if self.centroids == None:
+            raise NotFittedError("KMeans model has not been fitted yet!")
+        dists = self.get_distances(x, self.centroids)
         
     def predict(self, X: ArrayLike):
         """
         Predicts class value for [X]
         """
-        #TODO:
-        pass
+        return np.array([self._predict(x) for x in X])
