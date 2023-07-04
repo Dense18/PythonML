@@ -15,8 +15,9 @@ class KMeans(UnSupervisedModel):
     K-means Clustering using lloyd's algorithm
     """
     def __init__(self, 
-                 init = "k++",
                  n_clusters: int = 3,
+                 *,
+                 init = "k++",
                  max_iterations: int = 1,
                  dist_metric: str = "euclidean",
                  random_seed: Optional[int] = None,
@@ -159,6 +160,13 @@ class KMeans(UnSupervisedModel):
                     c = range(self.n_clusters), edgecolors="black", 
                     marker = "*", s = 200)
         plt.show()
+    
+    def calc_intertia(self, X: ArrayLike, centroids: ArrayLike):
+        """
+        Calculates intertia, i.e, the WSS value
+        """
+        # dists = self.get_distances(X, centroids)
+        pass
     
     def _predict(self, x: ArrayLike):
         """

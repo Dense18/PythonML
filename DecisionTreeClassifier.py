@@ -34,6 +34,7 @@ class DecisionTreeClassifier(SupervisedModel):
         Decision Tree Classifier. Only supports numerical values with numpy array inputs.
     """
     def __init__(self,
+                 *,
                  min_samples_split: int = 2,
                  max_depth: int = 2,
                  ):
