@@ -12,7 +12,8 @@ class KNeighborsClassifier(SupervisedModel):
     def __init__(self, 
                  n_neighbors: int = 5, 
                  *,
-                 dist_metric: str = "euclidean"):
+                 dist_metric: str = "euclidean"
+                 ):
         self.X = None
         self.y = None
         self.n_neighbors = n_neighbors
