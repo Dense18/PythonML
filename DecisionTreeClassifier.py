@@ -6,6 +6,7 @@ from  numpy.typing import ArrayLike
 from typing import Optional
 from scipy import stats as st
 from utils.utils import most_common_label
+from sklearn.utils.validation import NotFittedError
 
 class Node:
     """
@@ -144,7 +145,7 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Compute entropy value from [y]
         """
-        # Only support numerical values but faster than the method below
+        # Only support numerical values with a non-large values but faster than the method below
         hist = np.bincount(y.astype(int)) #should be integers, does not work with floats
         prob_features = hist / len(y)
         return  -np.sum([p * np.log2(p) for p in prob_features if p > 0])
@@ -184,7 +185,7 @@ class DecisionTreeClassifier(SupervisedModel):
         Predicts class value for [X]
         """
         if self.root == None:
-            raise SystemError("Classifier has not been fitted yet!")
+            raise NotFittedError("Classifier has not been fitted yet!")
         return np.array([self.traverse(x, self.root) for x in X])
     
     def traverse(self, instance: ArrayLike, node: Node): 

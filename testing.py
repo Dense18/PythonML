@@ -20,22 +20,24 @@ a_f = lambda y: y + 3
 func = lambda x: a_f(x)
 
 
-# vec_func = np.vectorize(func)
-# start = time.time()
-# for i in range(1000000):
-#     out = np.array([func(x) for j,x in enumerate(x_column)])
-# time_takem = time.time() - start
-# print(f"first using Counter: {time_takem}")
-# print(out)
+vec_func = np.vectorize(func)
+start = time.time()
+l = []
+for i in range(1000000):
+    l = []
+    for i in range(1000):
+        l.append(i)
+    l = np.array(l)
+time_takem = time.time() - start
+print(f"first using Counter: {time_takem}")
+
 
 
 start = time.time()
-aya = np.zeros(1000)
+
 for i in range(1000000):
-    vec_func = np.vectorize(func)
-    aya = vec_func(x_column)
-    # for j, x in enumerate(x_column):
-    #     aya[j] = func(x)
+    aya = np.zeros(1000)
+    for i in range(1000):
+        aya[i] = i
 time_takem = time.time() - start
 print(f"first using  scipy: {time_takem}")
-print(aya)

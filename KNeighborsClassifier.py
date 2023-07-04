@@ -4,6 +4,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 import utils.distUtil as distUtil
 from utils.utils import most_common_label
+from sklearn.utils.validation import NotFittedError
 
 class KNeighborsClassifier(SupervisedModel):
     """Classifier implementing  k-nearest neighbors vote"""
@@ -32,6 +33,8 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Predicts class value for instance [x]
         """
+        if self.X == None or self.Y == None:
+            raise NotFittedError("Classifier has not beed fiited yet!")
         dist_list = np.array([self.dist_func(x, instance) for instance in self.X])
         sorted_indexs = np.argsort(dist_list)[:self.n_neighbors]
         y_values = self.y[sorted_indexs]
