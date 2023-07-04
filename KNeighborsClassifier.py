@@ -33,8 +33,6 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Predicts class value for instance [x]
         """
-        if self.X == None or self.Y == None:
-            raise NotFittedError("Classifier has not beed fiited yet!")
         dist_list = np.array([self.dist_func(x, instance) for instance in self.X])
         sorted_indexs = np.argsort(dist_list)[:self.n_neighbors]
         y_values = self.y[sorted_indexs]
@@ -44,4 +42,6 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Predicts class value for [X]
         """
+        if self.X == None or self.Y == None:
+            raise NotFittedError("Classifier has not beed fiited yet!")
         return np.array([self._predict(x) for x in X])
