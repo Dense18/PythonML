@@ -24,9 +24,7 @@ vec_func = np.vectorize(func)
 start = time.time()
 l = []
 for i in range(1000000):
-    l = []
-    for i in range(1000):
-        l.append(i)
+    l = [j for j in range(1000)]
     l = np.array(l)
 time_takem = time.time() - start
 print(f"first using Counter: {time_takem}")
@@ -37,7 +35,7 @@ start = time.time()
 
 for i in range(1000000):
     aya = np.zeros(1000)
-    for i in range(1000):
-        aya[i] = i
+    for j in range(1000):
+        aya[j] = j
 time_takem = time.time() - start
 print(f"first using  scipy: {time_takem}")
