@@ -40,6 +40,7 @@ class KMeans(UnSupervisedModel):
         
         self.labels = None
         self.centroids = None
+        self.inertia = None
         
         self.iter_count = 0
         
@@ -79,6 +80,7 @@ class KMeans(UnSupervisedModel):
         self.iter_count = iter_count
         self.centroids = centroids
         self.labels = cluster_num
+        self.inertia = self.calc_inertia(X, cluster_num, centroids)
     
     def init_centroids(self):
         """
@@ -136,13 +138,7 @@ class KMeans(UnSupervisedModel):
         
         Returns in the form where col = centroids number.
         """
-        
-        n = len(centroids)
-        
-        dist = np.zeros(n)
-        for i in range(n):
-             dist[i] = self.dist_func(x, centroids[i]) 
-        return dist
+        return np.array([self.dist_func(x, centroids[i]) for i in range(len(centroids))])
     
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
         """
@@ -161,12 +157,11 @@ class KMeans(UnSupervisedModel):
                     marker = "*", s = 200)
         plt.show()
     
-    def calc_intertia(self, X: ArrayLike, centroids: ArrayLike):
+    def calc_inertia(self, X: ArrayLike, labels: ArrayLike, centroids: ArrayLike):
         """
         Calculates intertia, i.e, the WSS value
         """
-        # dists = self.get_distances(X, centroids)
-        pass
+        return np.sum(self.dist_func(X, centroids[labels], axis = 1))
     
     def _predict(self, x: ArrayLike):
         """
