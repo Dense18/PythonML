@@ -53,7 +53,9 @@ class KNeighborsClassifier(SupervisedModel):
             raise NotFittedError("Classifier has not beed fiited yet!")
         return np.array([self._predict(x) for x in X])
     
+    
     ####### Validation ######
+    
     
     def validate(self, n_neighbors):
         """

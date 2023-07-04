@@ -133,6 +133,7 @@ class KMeans(UnSupervisedModel):
     
     ###### Centroid initialization ######
     
+    
     def init_centroids(self):
         """
         Initialize centroids location based on init parameter given on constructor.
@@ -173,6 +174,7 @@ class KMeans(UnSupervisedModel):
     
     ###### Calculations ######
     
+    
     def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
         Returns distances between [X] and [centroids]
@@ -203,6 +205,7 @@ class KMeans(UnSupervisedModel):
     
     ###### Plot ######
     
+    
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
         """
         Plots a 2D kmeans graph after applying PCA on the current [iteration].
@@ -220,7 +223,9 @@ class KMeans(UnSupervisedModel):
                     marker = "*", s = 200)
         plt.show()
     
+    
     ###### Validation ######
+    
     
     def validate(self, n_clusters, max_iterations, n_init, tol):
         """

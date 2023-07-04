@@ -87,7 +87,9 @@ class DecisionTreeClassifier(SupervisedModel):
             raise NotFittedError("Classifier has not been fitted yet!")
         return np.array([self.traverse(x, self.root) for x in X])   
     
+    
     ###### Tree building ######
+    
     
     def build_tree(self, X: ArrayLike, y: ArrayLike, cur_depth = 0) -> Node:
         """
@@ -174,7 +176,9 @@ class DecisionTreeClassifier(SupervisedModel):
         avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
         return avg_arr
     
-     ###### Calculation ######
+    
+    ###### Calculation ######
+    
      
     def info_gain(self, parent_y: ArrayLike, left_y: ArrayLike, right_y: ArrayLike) -> float: 
         """
@@ -214,9 +218,11 @@ class DecisionTreeClassifier(SupervisedModel):
         # _ , counts = np.unique(y, return_counts=True)
         #prob_features = counts / len(y)  
         # return np.sum([-prob * np.log2(prob) for prob in prob_features])
+    
            
     ###### Validate ######
 
+    
     def validate(self, min_samples_split, max_depth):
         """
         Validate provided arguments
@@ -228,7 +234,9 @@ class DecisionTreeClassifier(SupervisedModel):
         if max_depth < 0:
             raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")  
     
+    
     ###### Text presentation ######
+    
     
     def print_tree(self, spacing = 3, max_depth = 10, export = False):
         """
