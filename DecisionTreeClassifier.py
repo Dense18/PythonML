@@ -67,7 +67,9 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
             X, y = np.array(X), np.array(y)
-            
+        
+        print(y.ndim)
+        super().validate_fit_args(X, y)   
         self.root = self.build_tree(X, y)
     
     def traverse(self, instance: ArrayLike, node: Node): 

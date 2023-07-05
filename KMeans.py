@@ -103,6 +103,7 @@ class KMeans(UnSupervisedModel):
         """
         Fits the model based on the training set [X] 
         """
+        super().validate_fit_args(X)  
         best_inertia = np.inf        
         best_fit_return = None
         
