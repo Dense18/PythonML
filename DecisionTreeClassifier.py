@@ -44,7 +44,7 @@ class DecisionTreeClassifier(SupervisedModel):
     def __init__(self,
                  *,
                  min_samples_split: int = 2,
-                 max_depth: int = 2,
+                 max_depth: int = np.iinfo(np.int32).max,
                  ):
         
         self.validate(
