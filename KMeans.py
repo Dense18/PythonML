@@ -52,7 +52,6 @@ class KMeans(UnSupervisedModel):
         self.centroids = None
         self.inertia = None
         
-        self.n_features_in = None
         self.n_iter = 0
 
     def _fit(self, X: ArrayLike, plot = False):
@@ -103,7 +102,7 @@ class KMeans(UnSupervisedModel):
         """
         Fits the model based on the training set [X] 
         """
-        super().validate_fit_args(X)  
+        super().fit(X)  
         best_inertia = np.inf        
         best_fit_return = None
         

@@ -73,7 +73,7 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Builds a decision tree classifier from the training set ([X],[y]) 
         """
-        super().validate_fit_args(X, y)
+        super().fit(X, y)
         self.n_features_in = X.shape[1]
         self.max_features_ = self.n_features_in if self.max_features is None else self.max_features   
         self.root = self.build_tree(X, y)
