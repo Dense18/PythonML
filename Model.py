@@ -1,19 +1,22 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from numpy.typing import ArrayLike
 import numpy as np
 
 class SupervisedModel(ABC):
+    @abstractmethod
     def predict(self, X: ArrayLike):
         """
         Predicts class/regression value for [X]
         """
         raise NotImplementedError
     
+    @abstractmethod
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fits the model based on the training set ([X], [y])
         """
-        raise NotImplementedError
+        self.validate_fit_args(X, y)
+        self.n_features_in = X.shape[1]
 
     def validate_fit_args(self, X: ArrayLike, y: ArrayLike):
         """
@@ -36,21 +39,27 @@ class SupervisedModel(ABC):
             )
     
 class UnSupervisedModel(ABC):
+    @abstractmethod
     def predict(self, X: ArrayLike):
         """
         Predicts class/regression value for [X]
         """
         raise NotImplementedError
     
+    @abstractmethod
     def fit(self, X: ArrayLike):
         """
         Fits the model based on the training set [X]
         """
-        raise NotImplementedError
+        self.validate_fit_args(X)
+        self.n_features_in = X.shape[1]
     
     def validate_fit_args(self, X: ArrayLike):
         """
         Validates training set [X]
         """
+        if not isinstance(X, np.ndarray):
+            raise ValueError(f"X must be an nd array. Got a type of {type(X)} instead.")
+        
         if X.ndim != 2:
             raise ValueError(f"X must be a 2-dimensional array. Got {X.ndim}-dimensional array instead.")
