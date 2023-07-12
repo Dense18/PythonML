@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from numpy.typing import ArrayLike
 import numpy as np
+from utils.validation import check_consistent_length
 
 class SupervisedModel(ABC):
     @abstractmethod
@@ -32,11 +33,7 @@ class SupervisedModel(ABC):
         if y.ndim != 1:
             raise ValueError(f"y must be a 1-dimensional array. Got {y.ndim}-dimensional array instead.")
         
-        if X.shape[0] != y.shape[0]:
-            raise ValueError(
-                f"X and y should have the same number of rows. " +
-                f"Got no.row of X:{X.shape[0]} and no.row of y: {y.shape[0]} instead."
-            )
+        check_consistent_length(X, y)
     
 class UnSupervisedModel(ABC):
     @abstractmethod
