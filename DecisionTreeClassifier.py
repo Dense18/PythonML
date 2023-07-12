@@ -93,7 +93,7 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Builds the decision tree
         """
-        num_samples, num_features = np.shape(X)
+        num_samples, num_features = X.shape
         n_labels = len(np.unique(y))
         
         ## Decision Node
