@@ -28,6 +28,12 @@ class SupervisedModel(ABC):
             raise ValueError(f"X must be a 2-dimensional array. Got {X.ndim}-dimensional array instead.")
         if y.ndim != 1:
             raise ValueError(f"y must be a 1-dimensional array. Got {y.ndim}-dimensional array instead.")
+        
+        if X.shape[0] != y.shape[0]:
+            raise ValueError(
+                f"X and y should have the same number of rows. " +
+                f"Got no.row of X:{X.shape[0]} and no.row of y: {y.shape[0]} instead."
+            )
     
 class UnSupervisedModel(ABC):
     def predict(self, X: ArrayLike):
