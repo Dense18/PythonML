@@ -26,14 +26,16 @@ class KNeighborsClassifier(SupervisedModel):
         self.dist_metric = dist_metric
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
+        
+        self.n_features_in = None
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fits the model based on the training set ([X], [y])
         """
         super().validate_fit_args(X, y)  
-        self.X = X
-        self.y = y
+        self.X, self.y = X, y
+        self.n_features_in = X.shape[1]
     
     def _predict(self, x: ArrayLike):
         """

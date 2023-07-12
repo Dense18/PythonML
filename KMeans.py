@@ -46,13 +46,13 @@ class KMeans(UnSupervisedModel):
         self.dist_func = self.dist_dict[dist_metric]
         
         self.rng = np.random.default_rng(random_seed)
-        
         self.tol = tol
         
         self.labels = None
         self.centroids = None
         self.inertia = None
         
+        self.n_features_in = None
         self.n_iter = 0
 
     def _fit(self, X: ArrayLike, plot = False):
@@ -68,9 +68,9 @@ class KMeans(UnSupervisedModel):
         
         inertia: WSS value of points based on their cluster
         """
-        if not isinstance(X, np.ndarray):
-            X = np.array(X)
+        super().validate_fit_args(X)
         self.X = X
+        self.n_features_in = X.shape[1]
         
         centroids = self.k_plus_centroids()
         n_iter = 0
