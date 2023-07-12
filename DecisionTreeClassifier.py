@@ -45,11 +45,14 @@ class DecisionTreeClassifier(SupervisedModel):
                  *,
                  min_samples_split: int = 2,
                  max_depth: int = np.iinfo(np.int32).max,
+                 max_features: Optional[int] = None,
+                 random_state: Optional[int] = None
                  ):
         
         self.validate(
             min_samples_split = min_samples_split,
-            max_depth = max_depth
+            max_depth = max_depth,
+            max_features = max_features
         )
         
         self.X = None
@@ -59,13 +62,20 @@ class DecisionTreeClassifier(SupervisedModel):
         
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
+        self.max_features = max_features
+        
+        self.n_features_in = None
+        self.max_features_ = None
+        self.rng = np.random.default_rng(random_state)
     
     
     def fit(self, X: ArrayLike, y: ArrayLike): 
         """
         Builds a decision tree classifier from the training set ([X],[y]) 
         """
-        super().validate_fit_args(X, y)   
+        super().validate_fit_args(X, y)
+        self.n_features_in = X.shape[1]
+        self.max_features_ = self.n_features_in if self.max_features is None else self.max_features   
         self.root = self.build_tree(X, y)
     
     def traverse(self, instance: ArrayLike, node: Node): 
@@ -93,15 +103,15 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Builds the decision tree
         """
-        num_samples, num_features = X.shape
+        num_samples = X.shape[0]
         n_labels = len(np.unique(y))
         
         ## Decision Node
         if num_samples >= self.min_samples_split and cur_depth <= self.max_depth and n_labels != 1:
-            feature_index, threshold, gain, left_indexs, right_indexs = self.best_split(X, y, num_features)
+            feature_index, threshold, gain, left_indexs, right_indexs = self.best_split(X, y, self.max_features_)
             if gain < 0:
                 raise ValueError("Info gain cannot be negative!")
-            left = self.build_tree(X[left_indexs,:],y[left_indexs], cur_depth + 1)
+            left = self.build_tree(X[left_indexs,:], y[left_indexs], cur_depth + 1)
             right = self.build_tree(X[right_indexs,:], y[right_indexs], cur_depth + 1)
             return Node(feature_index, threshold, left, right, gain)
             
@@ -124,7 +134,7 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def best_split(self, X: ArrayLike, y: ArrayLike, num_features: int):
         """
-        Returns the best split information based on the dataset ([X], [Y])
+        Returns the best split information based on the dataset ([X], [Y]) with random subset of [num_features] chosen
         
         Returns in the following order:
             split_index: feature index of the split
@@ -142,7 +152,11 @@ class DecisionTreeClassifier(SupervisedModel):
         best_right_idx = None
         
         y_entropy, y_size = self.entropy(y), len(y)
-        for feature_index in range(num_features):
+        
+        features_idx_arr = self.rng.choice(self.n_features_in, min(self.n_features_in, num_features), replace = False) \
+            if num_features != self.n_features_in else np.arange(num_features)
+        
+        for feature_index in features_idx_arr: #for feature_index in range(num_features):
             feature_data = X[:,feature_index] 
             possible_thresholds = np.unique(feature_data) #self.get_thresholds(features)
             for threshold in possible_thresholds:
@@ -221,7 +235,7 @@ class DecisionTreeClassifier(SupervisedModel):
     ###### Validate ######
 
     
-    def validate(self, min_samples_split, max_depth):
+    def validate(self, min_samples_split, max_depth, max_features):
         """
         Validate provided arguments
         """
@@ -230,7 +244,10 @@ class DecisionTreeClassifier(SupervisedModel):
             raise ValueError(f"min_samples_split should be greater than 2. Got {min_samples_split} instead.")
         
         if max_depth < 0:
-            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")  
+            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")
+        
+        if max_features is not None and max_features < 1:
+            raise ValueError(f"max_features int value should be greater than 1. Got {max_features} instead.")  
     
     
     ###### Text presentation ######
