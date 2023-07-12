@@ -67,7 +67,7 @@ class KMeans(UnSupervisedModel):
         
         inertia: WSS value of points based on their cluster
         """
-        super().validate_fit_args(X)
+        super().fit(X)
         self.X = X
         self.n_features_in = X.shape[1]
         
