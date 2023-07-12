@@ -31,9 +31,6 @@ class KNeighborsClassifier(SupervisedModel):
         """
         Fits the model based on the training set ([X], [y])
         """
-        if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
-            X, y = np.array(X), np.array(y)
-        
         super().validate_fit_args(X, y)  
         self.X = X
         self.y = y

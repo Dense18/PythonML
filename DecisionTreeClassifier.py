@@ -65,10 +65,6 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Builds a decision tree classifier from the training set ([X],[y]) 
         """
-        if not isinstance(X, np.ndarray) and not isinstance(y, np.ndarray):
-            X, y = np.array(X), np.array(y)
-        
-        print(y.ndim)
         super().validate_fit_args(X, y)   
         self.root = self.build_tree(X, y)
     
