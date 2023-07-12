@@ -7,7 +7,7 @@ from utils.utils import most_common_label
 from sklearn.utils.validation import NotFittedError
 
 class KNeighborsClassifier(SupervisedModel):
-    """Classifier implementing  k-nearest neighbors vote"""
+    """Classifier implementing k-nearest neighbors vote"""
     
     def __init__(self, 
                  n_neighbors: int = 5, 
