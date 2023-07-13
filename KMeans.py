@@ -1,7 +1,8 @@
 import numpy as np
 from numpy.typing import ArrayLike
 from Model import UnSupervisedModel
-import utils.distUtil as distUtil
+from utils.metrics import euclidean
+from utils.metrics import manhattan
 
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -105,7 +106,7 @@ class KMeans(UnSupervisedModel):
         self.n_init = n_init
         
         self.dist_metric = dist_metric
-        self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
+        self.dist_dict = {"euclidean": euclidean, "manhattan": manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
         
         self.rng = np.random.default_rng(random_state)

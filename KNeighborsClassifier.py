@@ -2,7 +2,8 @@ from Model import SupervisedModel
 from collections import Counter
 import numpy as np
 from numpy.typing import ArrayLike
-import utils.distUtil as distUtil
+from utils.metrics import euclidean
+from utils.metrics import manhattan
 from utils.utils import most_common_label
 from sklearn.utils.validation import NotFittedError
 
@@ -55,7 +56,7 @@ class KNeighborsClassifier(SupervisedModel):
         self.n_neighbors = n_neighbors
         
         self.dist_metric = dist_metric
-        self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
+        self.dist_dict = {"euclidean": euclidean, "manhattan": manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
        
     def fit(self, X: ArrayLike, y: ArrayLike):
