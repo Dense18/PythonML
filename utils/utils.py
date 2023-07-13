@@ -11,31 +11,38 @@ def most_common_label(y: ArrayLike):
     # return st.mode(y, keepdims = False).mode # Much Faster than Counter if y is a numpy array, otherwise slower
     # return np.bincount(y).argmax() # Fastest, best with numpy array. only works if y is an array of integers with values that aren't large 
 
-def obtain_bootstrap_idxs(X: ArrayLike, rng: Optional[np.random.Generator] = None):
+def obtain_bootstrap_idxs(X: ArrayLike, rng: Optional[np.random.Generator] = None, return_oob = True):
     """
     Obtain bootstrap indexes samples from dataset ([X], y)
     
     Returns:
         idxs: indexes used for bootstrap samples
-        oob_idxs: indexes used for OOB (Out-Of-Bag)
+        oob_idxs: indexes used for OOB (Out-Of-Bag). Only provided if return_oob is True
     """
     if rng is None:
         rng = np.random.default_rng()
         
     n_samples = X.shape[0]
     idxs = rng.choice(n_samples, n_samples, replace = True)
+    if not return_oob:
+        return idxs
+    
     oob_idxs = np.setdiff1d(np.arange(n_samples), idxs)
     return idxs, oob_idxs
 
-def obtain_bootstrap_samples(X: ArrayLike, y: ArrayLike, rng: Optional[np.random.Generator] = None):
+def obtain_bootstrap_samples(X: ArrayLike, y: ArrayLike, rng: Optional[np.random.Generator] = None, return_oob = True):
     """
     Obtain bootstrap samples from dataset ([X], y)
     
     Returns:
         X_bootstrap: bootstrap samples from X
-        X_oob: OOB (Out-Of-Bag) samples from X
+        X_oob: OOB (Out-Of-Bag) samples from X. Only provided if return_oob is True
         y_bootstrap: bootstrap samples from Y
-        y_oob: OOB (Out-Of-Bag) samples from Y
+        y_oob: OOB (Out-Of-Bag) samples from Y. Only provided if return_oob is True
     """
-    idxs, oob_idxs = obtain_bootstrap_idxs(X, rng)
-    return X[idxs], X[oob_idxs], y[idxs], y[oob_idxs]
+    if return_oob:
+        idxs, oob_idxs = obtain_bootstrap_idxs(X, rng, return_oob)
+        return X[idxs], X[oob_idxs], y[idxs], y[oob_idxs]
+    else:
+        idxs = obtain_bootstrap_idxs(X, rng, return_oob)
+        return X[idxs], y[idxs]
