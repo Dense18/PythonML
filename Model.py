@@ -6,6 +6,9 @@ from utils.validation import check_X_y
 from utils.validation import check_X
 
 class SupervisedModel(ABC):
+    """
+    Abstract class for Supervised Models
+    """
     @abstractmethod
     def predict(self, X: ArrayLike):
         """
@@ -23,6 +26,9 @@ class SupervisedModel(ABC):
         self.n_features_in = X.shape[1]
     
 class UnSupervisedModel(ABC):
+    """
+    Abstract class for Unsupervised Models
+    """
     @abstractmethod
     def predict(self, X: ArrayLike):
         """
