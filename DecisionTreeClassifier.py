@@ -1,10 +1,8 @@
 import math
-from collections import Counter
 from typing import Optional, Self
 
 import numpy as np
 from numpy.typing import ArrayLike
-from scipy import stats as st
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
