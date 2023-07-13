@@ -6,6 +6,8 @@ from typing import Optional
 import numpy as np
 from utils.utils import most_common_label
 from utils.utils import obtain_bootstrap_samples
+from utils.utils import obtain_bootstrap_samples_with_oob
+from utils.utils import obtain_bootstrap_samples_r
 from utils.metrics import accuracy_score
 
 class RandomForest(SupervisedModel):
@@ -18,7 +20,7 @@ class RandomForest(SupervisedModel):
                  max_depth: int = np.iinfo(np.int32).max,
                  max_features: Optional[int] = None,
                  bootstrap: bool = True,
-                 compute_oob: bool = False,
+                 compute_oob: bool = True,
                  random_state: Optional[int|np.random.Generator] = None
                  ):
         
@@ -60,9 +62,9 @@ class RandomForest(SupervisedModel):
                 continue
             
             if self.compute_oob: # Dont compute oob if unnecessary for efficiency
-                X_boot, X_oob, y_boot, y_oob = obtain_bootstrap_samples(X, y, return_oob = True)
+                X_boot, X_oob, y_boot, y_oob = obtain_bootstrap_samples_r(X, y, return_oob = True)
             else:
-                X_boot, y_boot= obtain_bootstrap_samples(X, y, return_oob = False)    
+                X_boot, y_boot= obtain_bootstrap_samples(X, y)  
 
             tree_cls.fit(X_boot, y_boot)
             self.trees.append(tree_cls)
