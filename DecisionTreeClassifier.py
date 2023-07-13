@@ -153,8 +153,7 @@ class DecisionTreeClassifier(SupervisedModel):
         
         y_entropy, y_size = self.entropy(y), len(y)
         
-        features_idx_arr = self.rng.choice(self.n_features_in, min(self.n_features_in, num_features), replace = False) \
-            if num_features != self.n_features_in else np.arange(num_features)
+        features_idx_arr = self.rng.choice(self.n_features_in, min(self.n_features_in, num_features), replace = False) 
         
         for feature_index in features_idx_arr: #for feature_index in range(num_features):
             feature_data = X[:,feature_index] 
