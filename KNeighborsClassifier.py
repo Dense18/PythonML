@@ -1,11 +1,11 @@
-from Model import SupervisedModel
-from collections import Counter
 import numpy as np
 from numpy.typing import ArrayLike
-from utils.metrics import euclidean
-from utils.metrics import manhattan
-from utils.utils import most_common_label
 from sklearn.utils.validation import NotFittedError
+
+from Model import SupervisedModel
+from utils.metrics import euclidean, manhattan
+from utils.utils import most_common_label
+
 
 class KNeighborsClassifier(SupervisedModel):
     """

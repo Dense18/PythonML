@@ -1,14 +1,15 @@
+from typing import Optional
+
+import numpy as np
 from numpy.typing import ArrayLike
+from sklearn.utils.validation import NotFittedError
+
 from DecisionTreeClassifier import DecisionTreeClassifier
 from Model import SupervisedModel
-from sklearn.utils.validation import NotFittedError
-from typing import Optional
-import numpy as np
-
-from utils.utils import most_common_label
-from utils.utils import obtain_bootstrap_samples
-from utils.utils import obtain_bootstrap_samples_with_oob
 from utils.metrics import accuracy_score
+from utils.utils import (most_common_label, obtain_bootstrap_samples,
+                         obtain_bootstrap_samples_with_oob)
+
 
 class RandomForest(SupervisedModel):
     """

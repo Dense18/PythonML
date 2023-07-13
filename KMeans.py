@@ -1,15 +1,15 @@
-import numpy as np
-from numpy.typing import ArrayLike
-from Model import UnSupervisedModel
-from utils.metrics import euclidean
-from utils.metrics import manhattan
-
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from IPython.display import clear_output
 from typing import Optional
 
+import matplotlib.pyplot as plt
+import numpy as np
+from IPython.display import clear_output
+from numpy.typing import ArrayLike
+from sklearn.decomposition import PCA
 from sklearn.utils.validation import NotFittedError
+
+from Model import UnSupervisedModel
+from utils.metrics import euclidean, manhattan
+
 
 class KMeans(UnSupervisedModel):
     """

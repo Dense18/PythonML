@@ -1,13 +1,15 @@
-from Model import SupervisedModel
-import numpy as np
 import math
-from typing import Self
 from collections import Counter
-from  numpy.typing import ArrayLike
-from typing import Optional
+from typing import Optional, Self
+
+import numpy as np
+from numpy.typing import ArrayLike
 from scipy import stats as st
-from utils.utils import most_common_label
 from sklearn.utils.validation import NotFittedError
+
+from Model import SupervisedModel
+from utils.utils import most_common_label
+
 
 class Node:
     """
