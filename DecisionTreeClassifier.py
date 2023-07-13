@@ -80,6 +80,8 @@ class DecisionTreeClassifier(SupervisedModel):
             
         random_state:
             Value to control the randomness of the model
+        
+        A
     """
     def __init__(self,
                  *,
@@ -111,7 +113,7 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def fit(self, X: ArrayLike, y: ArrayLike): 
         """
-        Builds a decision tree classifier from the training set ([X],[y]) 
+        Build a decision tree classifier from the training set ([X],[y]) 
         """
         super().fit(X, y)
         self.n_features_in = X.shape[1]
@@ -129,7 +131,7 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def predict(self, X: ArrayLike):
         """
-        Predicts class value for [X]
+        Predict class value for [X]
         """
         if self.root is None:
             raise NotFittedError("Classifier has not been fitted yet!")
@@ -141,7 +143,7 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def build_tree(self, X: ArrayLike, y: ArrayLike, cur_depth = 0) -> Node:
         """
-        Builds the decision tree
+        Build the decision tree
         """
         num_samples = X.shape[0]
         n_labels = len(np.unique(y))
@@ -161,7 +163,7 @@ class DecisionTreeClassifier(SupervisedModel):
         
     def split(self, feature_data: ArrayLike, threshold):
         """
-        Returns the left and right indexes of [feature_data] after a split based on the [threshold] 
+        Return the left and right indexes of [feature_data] after a split based on the [threshold] 
         """
         ## Categorial variable
         # left_idxs = np.argwhere(feature_data == split_thresh).flatten()
@@ -174,9 +176,9 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def best_split(self, X: ArrayLike, y: ArrayLike, num_features: int):
         """
-        Returns the best split information based on the dataset ([X], [Y]) with random subset of [num_features] chosen
+        Return the best split information based on the dataset ([X], [Y]) with random subset of [num_features] chosen
         
-        Returns in the following order:
+        Return in the following order:
             split_index: feature index of the split
             split_threshhold: split threshold
             max_gain: information gain value based on the the best split
@@ -216,7 +218,7 @@ class DecisionTreeClassifier(SupervisedModel):
 
     def get_thresholds(self, feature_data: ArrayLike): 
         """
-        Returns the unique threshold value of [feature_data]
+        Return the unique threshold value of [feature_data]
         """
         ## if it is categorical
         # if np.dtype.type in (np.string_, np.object_): # 
@@ -233,7 +235,7 @@ class DecisionTreeClassifier(SupervisedModel):
      
     def info_gain(self, parent_y: ArrayLike, left_y: ArrayLike, right_y: ArrayLike) -> float: 
         """
-        Computes the information gain value
+        Compute the information gain value
         """
         parent_entropy = self.entropy(parent_y)
         n_parent = len(parent_y)
@@ -245,10 +247,11 @@ class DecisionTreeClassifier(SupervisedModel):
     def info_gain_with_parent_entropy(self, parent_entropy: float, n_parent: int, 
                                       left_y: ArrayLike, right_y: ArrayLike) -> float:
         """
-        Computes the information gain value given [parent_entropy] value and parent size [n_parent]
+        Compute the information gain value given [parent_entropy] value and parent size [n_parent]
         Much more efficient than info_gain(...) counterpart
         
-        Note: Make sure that [left_y] and [right_y] are mutually exclusive brances from the parent
+        Note: 
+            Ensure that [left_y] and [right_y] are mutually exclusive brances from the parent
         """
         w_left, w_right = len(left_y)/n_parent, len(right_y)/n_parent
         left_entropy, right_entropy = self.entropy(left_y), self.entropy(right_y)
@@ -294,7 +297,8 @@ class DecisionTreeClassifier(SupervisedModel):
     
     def print_tree(self, spacing = 3, max_depth = 10, export = False):
         """
-        Prints a text representation of the fitted decision tree. 
+        Print a text representation of the fitted decision tree.
+         
         Set "export = True" to return a tree str representation
         """
         

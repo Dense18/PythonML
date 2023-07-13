@@ -97,7 +97,7 @@ class KMeans(UnSupervisedModel):
         """
         Helper function to perform Kmeans once
         
-        Returns:
+        Return:
         n_iter: number of iterations run
         
         centroids: Co-ordinates of centroids
@@ -139,7 +139,7 @@ class KMeans(UnSupervisedModel):
     
     def fit(self, X: ArrayLike, plot = False):
         """
-        Fits the model based on the training set [X] 
+        Fit the model based on the training set [X] 
         """
         super().fit(X)  
         best_inertia = np.inf        
@@ -156,14 +156,14 @@ class KMeans(UnSupervisedModel):
     
     def _predict(self, x: ArrayLike):
         """
-        Predicts class value for instance [X]
+        Predict class value for instance [X]
         """
         dists = self.get_distances_oneD(x, self.centroids)
         return np.argmin(dists)
         
     def predict(self, X: ArrayLike):
         """
-        Predicts class value for [X]
+        Predict class value for [X]
         """
         if self.X is None:
             raise NotFittedError("KMeans model has not been fitted yet!")
@@ -192,7 +192,7 @@ class KMeans(UnSupervisedModel):
     
     def k_plus_centroids(self):
         """
-        Initialized centroids location using k-means++
+        Initialize centroids location using k-means++
         """
         centroids = []
         centroids.append(self.rng.choice(self.X))
@@ -216,9 +216,9 @@ class KMeans(UnSupervisedModel):
     
     def get_distances(self, X: ArrayLike, centroids: ArrayLike):
         """
-        Returns distances between [X] and [centroids]
+        Return distances between [X] and [centroids]
         
-        Returns in the form where row = instances in X, and col = centroids number.
+        Return in the form where row = instances in X, and col = centroids number.
         """
         n = len(centroids)
         
@@ -229,15 +229,15 @@ class KMeans(UnSupervisedModel):
     
     def get_distances_oneD(self, x: ArrayLike, centroids: ArrayLike):
         """
-        Returns distances between instance [X] and [centroids]
+        Return distances between instance [X] and [centroids]
         
-        Returns in the form where col = centroids number.
+        Return in the form where col = centroids number.
         """
         return np.array([self.dist_func(x, centroids[i]) for i in range(len(centroids))])
     
     def calc_inertia(self, X: ArrayLike, labels: ArrayLike, centroids: ArrayLike):
         """
-        Calculates intertia, i.e, the WSS value
+        Calculate intertia, i.e, the WSS value
         """
         return np.sum(self.dist_func(X, centroids[labels], axis = 1))
     
@@ -247,7 +247,7 @@ class KMeans(UnSupervisedModel):
     
     def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
         """
-        Plots a 2D kmeans graph after applying PCA on the current [iteration].
+        Plot a 2D kmeans graph after applying PCA on the current [iteration].
         
         Recommended to only use function on simple datasets with constructor attribute n_init = 1.
         """

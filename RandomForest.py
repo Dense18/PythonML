@@ -73,7 +73,7 @@ class RandomForest(SupervisedModel):
     
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Builds a decision tree classifier from the training set ([X],[y]) 
+        Build a decision tree classifier from the training set ([X],[y]) 
         """
         super().fit(X, y)
         self.n_features_in = X.shape[0]
@@ -111,7 +111,7 @@ class RandomForest(SupervisedModel):
             
     def predict(self, X: ArrayLike):
         """
-        Predicts class value for [X]
+        Predict class value for [X]
         """
         if self.trees is None:
             raise NotFittedError("Random Forest Classifier has not been fitted yet!")

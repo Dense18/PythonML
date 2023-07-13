@@ -47,7 +47,7 @@ class KNeighborsClassifier(SupervisedModel):
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Fits the model based on the training set ([X], [y])
+        Fit the model based on the training set ([X], [y])
         """
         super().fit(X, y)  
         self.X, self.y = X, y
@@ -55,7 +55,7 @@ class KNeighborsClassifier(SupervisedModel):
     
     def _predict(self, x: ArrayLike):
         """
-        Predicts class value for instance [x]
+        Predict class value for instance [x]
         """
         dist_list = np.array([self.dist_func(x, instance) for instance in self.X])
         sorted_indexs = np.argsort(dist_list)[:self.n_neighbors]
@@ -64,7 +64,7 @@ class KNeighborsClassifier(SupervisedModel):
 
     def predict(self, X: ArrayLike):
         """
-        Predicts class value for [X]
+        Predict class value for [X]
         """
         if self.X is None:
             raise NotFittedError("Classifier has not beed fiited yet!")

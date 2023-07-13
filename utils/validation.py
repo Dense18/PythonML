@@ -3,7 +3,7 @@ from numpy.typing import ArrayLike
 
 def check_consistent_length(*arrays):
     """
-    Checks if all given arrays have consistent first dimension.
+    Check if all given arrays have consistent first dimension.
     """
     lengths = [len(arr) for arr in arrays]
     n_unique = np.unique(lengths)
@@ -21,7 +21,7 @@ def check_array(arr: ArrayLike,
                 min_features: int = 1,
                 ):
     """
-    Validates input array [arr]
+    Validate input array [arr]
     """
     if arr.ndim == 0:
         raise ValueError(f"Expected an array. Got a scalar {arr} instead")
@@ -52,7 +52,7 @@ def check_X_y(X,
               all_finite: bool = True,
              ):
     """
-    By default, enforces [X] to be 2D and [y] to be 1D
+    Enforce [X] to be 2D and [y] to be 1D with valid structure
     """
     
     check_X(X, all_finite = all_finite)
@@ -64,7 +64,7 @@ def check_X(X: ArrayLike,
             all_finite: bool = True,
             ):
     """
-    Validates [X] array input.
+    Validate [X] array input.
     """
     check_array(
         X,
@@ -77,7 +77,7 @@ def check_X(X: ArrayLike,
     
 def check_y(y: ArrayLike):
     """
-    Validates [y] array input.
+    Validate [y] array input.
     """
     check_array(
         y,
@@ -91,7 +91,7 @@ def check_y(y: ArrayLike):
 
 def assert_all_finite(arr: ArrayLike, allow_inf: bool = False, allow_nan: bool = False):
     """
-    Asserts that all values of the array are finite. Throws ValueError otherwise.
+    Assert that all values of the array are finite. Throws ValueError otherwise.
     """
     has_inf_err = False if allow_inf else np.isinf(arr).any()
     if has_inf_err:
