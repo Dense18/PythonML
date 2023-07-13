@@ -14,13 +14,13 @@ class KMeans(UnSupervisedModel):
     """
     K-means Clustering using lloyd's algorithm
     
-    Paramaters:
+    Paramaters
     ----------
     
     n_clusters: int
         Number of clusters to form, which also includes the nubmer of centroids to generate
     
-    init: {"k++", "random}
+    init: {"k++", "random"}
         Initialization method
         
         "k++": Perform K-means++ initialization
@@ -52,6 +52,28 @@ class KMeans(UnSupervisedModel):
         Relative tolerance with regards to the differences of the
         centroids of two consecutive runs to declare convergence 
 
+    Attributes
+    ----------
+    All variables in [Parameters]
+    
+    init_func:
+        Initialization centroid function based on [init] value
+    
+    dist_func:
+        Distance Function based on [dist_metric] value
+        
+    labels: ndarray of shape (n_samples,)
+        Labels of each point
+    
+    centroids: ndarray of shape (n_clusters, n_features)
+        Co-ordinates of each centroid
+    
+    inertia: float
+        Intertia value, ui
+    
+    n_iter: int
+        Number of iterations run performed
+
     """
     def __init__(self, 
                  n_clusters: int = 3,
@@ -71,6 +93,8 @@ class KMeans(UnSupervisedModel):
             max_iter = max_iter,
             tol = tol
         )
+        
+        self.X = None
         
         self.n_clusters = n_clusters
         self.max_iter = max_iter
@@ -106,7 +130,6 @@ class KMeans(UnSupervisedModel):
         
         inertia: WSS value of points based on their cluster
         """
-        super().fit(X)
         self.X = X
         self.n_features_in = X.shape[1]
         

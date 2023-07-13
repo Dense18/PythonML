@@ -10,7 +10,7 @@ class KNeighborsClassifier(SupervisedModel):
     """
     Classifier implementing k-nearest neighbors vote
     
-    Paramaters:
+    Paramaters
     ----------
     n_neighbors:
         Number of neighbors to compare
@@ -24,6 +24,19 @@ class KNeighborsClassifier(SupervisedModel):
 
         If given argument is not on the supported dist_metric methods, "k++" will be used
     
+    Attributes
+    ----------
+    
+    All variables in [Parameters]
+    
+    X: Array
+        Independent variables on the training dataset
+    
+    Y: Array
+        Dependent variable on the training dataset
+
+    dist_func:
+        Distance Function based on [dist_metric] value
     
     """
     

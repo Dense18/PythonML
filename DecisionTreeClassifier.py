@@ -13,7 +13,7 @@ class Node:
     """
     A single Node instance of the Decision Tree
     
-    Parameters:
+    Parameters
     ----------
     feature_index:
         Index of the features used for comparison
@@ -34,6 +34,11 @@ class Node:
         Classification value of the Node
         
         Exclusively used for Leaf Node
+    
+    Attributes
+    ----------
+    
+    Same as the variables in [Parameters]
     """
     def __init__(self, 
                  feature_index: int = None, 
@@ -64,7 +69,7 @@ class DecisionTreeClassifier(SupervisedModel):
     """
         Decision Tree Classifier. Only supports numerical values with numpy array inputs.
         
-        Parameters:
+        Parameters
         ----------
         min_samples_split: 
             Minimum number of samples required to split an internal Node
@@ -81,7 +86,21 @@ class DecisionTreeClassifier(SupervisedModel):
         random_state:
             Value to control the randomness of the model
         
-        A
+        Attributes
+        ----------
+        All variables in [Parameters]
+        
+        X: Array
+            Independent variables on the training dataset
+        
+        Y: Array
+            Dependent variable on the training dataset
+        
+        max_features_: int
+            Inferred value of max features
+        
+        rng: Generator
+            RNG Generator used for randomness 
     """
     def __init__(self,
                  *,
@@ -106,7 +125,6 @@ class DecisionTreeClassifier(SupervisedModel):
         self.min_samples_split = min_samples_split
         self.max_features = max_features
         
-        self.n_features_in = None
         self.max_features_ = None
         self.rng = np.random.default_rng(random_state)
     
