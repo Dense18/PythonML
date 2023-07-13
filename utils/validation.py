@@ -14,7 +14,7 @@ def check_consistent_length(*arrays):
 
 def check_array(arr: ArrayLike, 
                 *, 
-                force_all_finite: bool = True,
+                all_finite: bool = True,
                 ensure_2d: bool = True,
                 allow_nd: bool = False, 
                 min_samples: int = 1,
@@ -26,7 +26,7 @@ def check_array(arr: ArrayLike,
     if arr.ndim == 0:
         raise ValueError(f"Expected an array. Got a scalar {arr} instead")
     
-    if force_all_finite:
+    if all_finite:
         assert_all_finite(arr)
         
     if ensure_2d:
@@ -49,26 +49,26 @@ def check_array(arr: ArrayLike,
 def check_X_y(X, 
               y,
               *,
-              force_all_finite: bool = True,
+              all_finite: bool = True,
              ):
     """
     By default, enforces [X] to be 2D and [y] to be 1D
     """
     
-    check_X(X, force_all_finite = force_all_finite)
+    check_X(X, all_finite = all_finite)
     check_y(y)
     check_consistent_length(X, y)
 
 def check_X(X: ArrayLike, 
             *, 
-            force_all_finite: bool = True,
+            all_finite: bool = True,
             ):
     """
     Validates [X] array input.
     """
     check_array(
         X,
-        force_all_finite = force_all_finite,
+        all_finite = all_finite,
         ensure_2d = True,
         allow_nd = False, 
         min_samples = 1,
@@ -81,7 +81,7 @@ def check_y(y: ArrayLike):
     """
     check_array(
         y,
-        force_all_finite = True,
+        all_finite = True,
         ensure_2d = False,
         allow_nd = False,
         min_samples = 1,
