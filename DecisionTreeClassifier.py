@@ -46,7 +46,7 @@ class DecisionTreeClassifier(SupervisedModel):
                  min_samples_split: int = 2,
                  max_depth: int = np.iinfo(np.int32).max,
                  max_features: Optional[int] = None,
-                 random_state: Optional[int] = None
+                 random_state: Optional[int| np.random.Generator] = None
                  ):
         
         self.validate(

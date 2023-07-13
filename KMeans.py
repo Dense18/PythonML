@@ -21,7 +21,7 @@ class KMeans(UnSupervisedModel):
                  n_init = 1,
                  max_iterations: int = 1,
                  dist_metric: str = "euclidean",
-                 random_seed: Optional[int] = None,
+                 random_state: Optional[int| np.random.Generator] = None,
                  tol: float = 1e-4
                  ):
 
@@ -45,7 +45,7 @@ class KMeans(UnSupervisedModel):
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
         self.dist_func = self.dist_dict[dist_metric]
         
-        self.rng = np.random.default_rng(random_seed)
+        self.rng = np.random.default_rng(random_state)
         self.tol = tol
         
         self.labels = None
