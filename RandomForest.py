@@ -21,7 +21,7 @@ class RandomForest(SupervisedModel):
                  max_features: Optional[int] = None,
                  bootstrap: bool = True,
                  compute_oob: bool = True,
-                 random_state: Optional[int|np.random.Generator] = None
+                 random_state: Optional[int | np.random.Generator] = None
                  ):
         
         self.n_estimators = n_estimators

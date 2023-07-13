@@ -21,7 +21,7 @@ class KMeans(UnSupervisedModel):
                  n_init = 1,
                  max_iterations: int = 1,
                  dist_metric: str = "euclidean",
-                 random_state: Optional[int| np.random.Generator] = None,
+                 random_state: Optional[int | np.random.Generator] = None,
                  tol: float = 1e-4
                  ):
 
