@@ -13,13 +13,52 @@ from sklearn.utils.validation import NotFittedError
 class KMeans(UnSupervisedModel):
     """
     K-means Clustering using lloyd's algorithm
+    
+    Paramaters:
+    ----------
+    
+    n_clusters: int
+        Number of clusters to form, which also includes the nubmer of centroids to generate
+    
+    init: {"k++", "random}
+        Initialization method
+        
+        "k++": Perform K-means++ initialization
+        
+        "random": Randomly choose the locations for initial centroids
+        
+        If given argument is not on the supported initialization methods, "k++" will be used
+    
+    n_init:
+        Number of times K-Means algorithm is executed. The final results
+        is the best output out of the 'n_init' consecutive runs
+    
+    max_iter:
+        Maximum number of iterations of the K-means algorithm in a single run
+    
+    dist_metric: {"euclidean", "manhattan"}
+        Metrics to calculate distance between points
+        
+        "euclidean": Peform euclidean method. 
+        
+        "manhattan": Perform manhttan method
+
+        If given argument is not on the supported dist_metric methods, "k++" will be used
+    
+    random_state:
+        Value to control the randomness of the model
+    
+    tol:
+        Relative tolerance with regards to the differences of the
+        centroids of two consecutive runs to declare convergence 
+
     """
     def __init__(self, 
                  n_clusters: int = 3,
                  *,
                  init = "k++",
                  n_init = 1,
-                 max_iterations: int = 1,
+                 max_iter: int = 1,
                  dist_metric: str = "euclidean",
                  random_state: Optional[int | np.random.Generator] = None,
                  tol: float = 1e-4
@@ -29,12 +68,12 @@ class KMeans(UnSupervisedModel):
         self.validate(
             n_clusters = n_clusters,
             n_init = n_init,
-            max_iterations = max_iterations,
+            max_iter = max_iter,
             tol = tol
         )
         
         self.n_clusters = n_clusters
-        self.max_iterations = max_iterations
+        self.max_iter = max_iter
         
         self.init = init
         self.init_dict = {"random": self.randomize_centroids, "k++": self.k_plus_centroids}
@@ -43,7 +82,7 @@ class KMeans(UnSupervisedModel):
         
         self.dist_metric = dist_metric
         self.dist_dict = {"euclidean": distUtil.euclidean, "manhattan": distUtil.manhattan}
-        self.dist_func = self.dist_dict[dist_metric]
+        self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
         
         self.rng = np.random.default_rng(random_state)
         self.tol = tol
@@ -75,7 +114,7 @@ class KMeans(UnSupervisedModel):
         n_iter = 0
         cluster_num = np.zeros(X.shape[0]).astype(int)
         
-        while n_iter < self.max_iterations:
+        while n_iter < self.max_iter:
             old_centroids = centroids.copy()
             
             ## Assign Cluster
@@ -227,15 +266,15 @@ class KMeans(UnSupervisedModel):
     ###### Validation ######
     
     
-    def validate(self, n_clusters, max_iterations, n_init, tol):
+    def validate(self, n_clusters, max_iter, n_init, tol):
         """
         Validate provided arguments
         """
         if n_clusters < 1:
             raise ValueError(f"n_cluster should be greater than 0. Got a value of {n_clusters} instead.")
         
-        if max_iterations < 1:
-            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iterations} instead.")
+        if max_iter < 1:
+            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iter} instead.")
         
         if n_init < 1:
             raise ValueError(f"n_init should be greater than 0. Got a value of {n_init} instead.")

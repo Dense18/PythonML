@@ -7,7 +7,25 @@ from utils.utils import most_common_label
 from sklearn.utils.validation import NotFittedError
 
 class KNeighborsClassifier(SupervisedModel):
-    """Classifier implementing k-nearest neighbors vote"""
+    """
+    Classifier implementing k-nearest neighbors vote
+    
+    Paramaters:
+    ----------
+    n_neighbors:
+        Number of neighbors to compare
+    
+    dist_metric: {"euclidean", "manhattan"}
+        Metrics to calculate distance between points
+        
+        "euclidean": Peform euclidean method. 
+        
+        "manhattan": Perform manhttan method
+
+        If given argument is not on the supported dist_metric methods, "k++" will be used
+    
+    
+    """
     
     def __init__(self, 
                  n_neighbors: int = 5, 

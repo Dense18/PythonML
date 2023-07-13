@@ -4,15 +4,48 @@ from Model import SupervisedModel
 from sklearn.utils.validation import NotFittedError
 from typing import Optional
 import numpy as np
+
 from utils.utils import most_common_label
 from utils.utils import obtain_bootstrap_samples
 from utils.utils import obtain_bootstrap_samples_with_oob
-from utils.utils import obtain_bootstrap_samples_r
 from utils.metrics import accuracy_score
 
 class RandomForest(SupervisedModel):
     """
     Random Forest classifier
+
+    Parameters:
+    ----------
+    n_estimators:
+        Number of trees in the forest
+        
+    min_samples_split: 
+        Minimum number of samples required to split an internal Node
+    
+    max_depth: 
+        Maximum depth of the tree 
+    
+    max_features: 
+        Number of features to consider when looking for the best split
+        
+        Setting max_features to None indicates that all features of the training
+        dataset will be used
+    
+    bootstrap:
+        Whether bootstrap samples are used when building trees.
+        
+        If False, the whole dataset is used to build each tree
+    
+    compute_oob:
+        Whether OOB score should be computed. This check will be enforced
+        only if [bootstrap] is True
+        
+        Setting it to False would allow the classifier to run faster since
+        no additional time will be required to compute OOB score
+        
+    random_state:
+        Value to control the randomness of the model
+    
     """
     def __init__(self, 
                  n_estimators: int = 10,
@@ -62,7 +95,7 @@ class RandomForest(SupervisedModel):
                 continue
             
             if self.compute_oob: # Dont compute oob if unnecessary for efficiency
-                X_boot, X_oob, y_boot, y_oob = obtain_bootstrap_samples_r(X, y, return_oob = True)
+                X_boot, X_oob, y_boot, y_oob = obtain_bootstrap_samples_with_oob(X, y)
             else:
                 X_boot, y_boot= obtain_bootstrap_samples(X, y)  
 

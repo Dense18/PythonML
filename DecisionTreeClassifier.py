@@ -1,6 +1,7 @@
 from Model import SupervisedModel
 import numpy as np
 import math
+from typing import Self
 from collections import Counter
 from  numpy.typing import ArrayLike
 from typing import Optional
@@ -11,15 +12,37 @@ from sklearn.utils.validation import NotFittedError
 class Node:
     """
     A single Node instance of the Decision Tree
+    
+    Parameters:
+    ----------
+    feature_index:
+        Index of the features used for comparison
+        
+    threshold:
+        Threshold value used to split the Node
+    
+    left:
+        Left Node
+    
+    right:
+        Right Node
+    
+    info_gain:
+        Information gain value of the current split based on the Left and Right Node
+    
+    value:
+        Classification value of the Node
+        
+        Exclusively used for Leaf Node
     """
     def __init__(self, 
-                 feature_index = None, 
-                 threshold = None,
-                 left = None, 
-                 right = None, 
-                 info_gain = None, 
+                 feature_index: int = None, 
+                 threshold: float = None,
+                 left: Self = None, 
+                 right: Self = None, 
+                 info_gain: float = None, 
                  *, 
-                 value = None
+                 value: Optional[int] = None
                  ) -> None:
         #Decision Node
         self.feature_index = feature_index
@@ -40,6 +63,23 @@ class Node:
 class DecisionTreeClassifier(SupervisedModel):
     """
         Decision Tree Classifier. Only supports numerical values with numpy array inputs.
+        
+        Parameters:
+        ----------
+        min_samples_split: 
+            Minimum number of samples required to split an internal Node
+        
+        max_depth: 
+            Maximum depth of the tree 
+        
+        max_features: 
+            Number of features to consider when looking for the best split
+
+            Setting max_features to None indicates that all features of the training
+            dataset will be used
+            
+        random_state:
+            Value to control the randomness of the model
     """
     def __init__(self,
                  *,
