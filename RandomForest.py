@@ -7,8 +7,8 @@ from sklearn.utils.validation import NotFittedError
 from DecisionTreeClassifier import DecisionTreeClassifier
 from Model import SupervisedModel
 from utils.metrics import accuracy_score
-from utils.utils import (most_common_label, obtain_bootstrap_samples,
-                         obtain_bootstrap_samples_with_oob)
+from utils.utils import (bootstrap_samples, bootstrap_samples_with_oob,
+                         most_common_label)
 
 
 class RandomForest(SupervisedModel):
@@ -52,8 +52,8 @@ class RandomForest(SupervisedModel):
     
     All variables in [Paramater]
     
-    max_features: int
-        Number of features to consider when looking for the best split
+    max_features_: int
+        Inferred number of features to consider when looking for the best split
 
         Setting max_features to None indicates that all features of the training
         dataset will be used
@@ -115,9 +115,9 @@ class RandomForest(SupervisedModel):
                 continue
             
             if self.compute_oob: # Dont compute oob if unnecessary for efficiency
-                X_boot, X_oob, y_boot, y_oob = obtain_bootstrap_samples_with_oob(X, y)
+                X_boot, X_oob, y_boot, y_oob = bootstrap_samples_with_oob(X, y, self.rng)
             else:
-                X_boot, y_boot= obtain_bootstrap_samples(X, y)  
+                X_boot, y_boot = bootstrap_samples(X, y, self.rng)  
 
             tree_cls.fit(X_boot, y_boot)
             self.trees.append(tree_cls)
