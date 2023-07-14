@@ -63,9 +63,8 @@ class RandomForest(SupervisedModel):
     
     oob_score: float
         OOB score obased on the training seen during the :term:`fit`
-    
-    
     """
+    
     def __init__(self, 
                  n_estimators: int = 10,
                  min_samples_split: int = 2,
