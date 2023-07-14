@@ -40,6 +40,7 @@ class Node:
     
     Same as the variables in [Parameters]
     """
+    
     def __init__(self, 
                  feature_index: int = None, 
                  threshold: float = None,
@@ -102,6 +103,7 @@ class DecisionTreeClassifier(SupervisedModel):
         rng: Generator
             RNG Generator used for randomness 
     """
+    
     def __init__(self,
                  *,
                  min_samples_split: int = 2,

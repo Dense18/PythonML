@@ -74,8 +74,8 @@ class KMeans(UnSupervisedModel):
     
     n_iter: int
         Number of iterations run performed
-
     """
+    
     def __init__(self, 
                  n_clusters: int = 3,
                  *,

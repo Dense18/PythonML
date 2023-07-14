@@ -38,7 +38,6 @@ class KNeighborsClassifier(SupervisedModel):
 
     dist_func:
         Distance Function based on [dist_metric] value
-    
     """
     
     def __init__(self, 
