@@ -50,8 +50,8 @@ class KMeans(UnSupervisedModel):
         Value to control the randomness of the model
     
     tol:
-        Relative tolerance with regards to the differences of the
-        centroids of two consecutive runs to declare convergence 
+        Relative tolerance with regards to the Frobenius norm of the differences
+        in the centroids of two consecutive runs to declare convergence 
 
     Attributes
     ----------
@@ -154,7 +154,7 @@ class KMeans(UnSupervisedModel):
                 self.plot_clusters(cluster_num, centroids, n_iter)
             
             ## Check convergence
-            if np.abs(np.max(old_centroids - centroids)) <= self.tol:
+            if np.linalg.norm(old_centroids - centroids) <= self.tol:
                 break
             
             n_iter += 1
