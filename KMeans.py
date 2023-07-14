@@ -28,7 +28,7 @@ class KMeans(UnSupervisedModel):
         
         "random": Randomly choose the locations for initial centroids
         
-        If given argument is not on the supported initialization methods, "k++" will be used
+        If provided argument is not on the supported values, "k++" will be used
     
     n_init:
         Number of times K-Means algorithm is executed. The final results
@@ -44,7 +44,7 @@ class KMeans(UnSupervisedModel):
         
         "manhattan": Perform manhttan method
 
-        If given argument is not on the supported dist_metric methods, "k++" will be used
+        If provided argument is not on the supported values, "euclidean" will be used
     
     random_state:
         Value to control the randomness of the model

@@ -23,7 +23,7 @@ class KNeighborsClassifier(SupervisedModel):
         
         "manhattan": Perform manhttan method
 
-        If given argument is not on the supported dist_metric methods, "k++" will be used
+        If provided argument is not on the supported values, "euclidean" will be used
     
     Attributes
     ----------
