@@ -109,7 +109,9 @@ class KMeans(UnSupervisedModel):
         self.dist_dict = {"euclidean": euclidean, "manhattan": manhattan}
         self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
         
+        self.random_state = random_state
         self.rng = np.random.default_rng(random_state)
+        
         self.tol = tol
         
         self.labels = None

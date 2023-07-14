@@ -79,9 +79,12 @@ class RandomForest(SupervisedModel):
         self.min_samples_split = min_samples_split
         self.max_depth = max_depth
         self.compute_oob = compute_oob
-        self.rng = np.random.default_rng(random_state)
+        
         self.max_features = max_features 
         self.bootstrap = bootstrap
+        
+        self.random_state = random_state
+        self.rng = np.random.default_rng(random_state)
         
         self.max_features_ = None
         self.trees = None

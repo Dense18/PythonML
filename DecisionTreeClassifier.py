@@ -127,9 +127,10 @@ class DecisionTreeClassifier(SupervisedModel):
         self.min_samples_split = min_samples_split
         self.max_features = max_features
         
-        self.max_features_ = None
+        self.random_state = random_state
         self.rng = np.random.default_rng(random_state)
-    
+        
+        self.max_features_ = None
     
     def fit(self, X: ArrayLike, y: ArrayLike): 
         """
