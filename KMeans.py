@@ -133,7 +133,6 @@ class KMeans(UnSupervisedModel):
         
         inertia: WSS value of points based on their cluster
         """
-        self.X = X
         self.n_features_in = X.shape[1]
         
         centroids = self.k_plus_centroids()
@@ -167,7 +166,8 @@ class KMeans(UnSupervisedModel):
         """
         Fit the model based on the training set [X] 
         """
-        super().fit(X)  
+        super().fit(X)
+        self.X = X  
         best_inertia = np.inf        
         best_fit_return = None
         
