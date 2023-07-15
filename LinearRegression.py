@@ -29,13 +29,15 @@ class LinearRegression(SupervisedModel):
     
     def __init__(self, *, fit_intercept: bool = True):
         self.fit_intercept = fit_intercept
-        
-    def least_squares(self, X, y):
+    
+    def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fit Linear Regression using Ordinary Least Squares 
         """
-        # Formula used: inverse(X'X)X'y
+        # Formula used: coef = inverse(X'X)X'y
         # Based on https://online.stat.psu.edu/stat462/node/132/
+        super().fit(X, y)
+        
         copy_X = X.copy()
         
         if self.fit_intercept:
@@ -44,15 +46,7 @@ class LinearRegression(SupervisedModel):
         inv = np.linalg.inv(np.dot(copy_X.T, copy_X)) # inverse(X'X)
         X_t_y = np.dot(copy_X.T, y) # X'y
         coef = np.dot(inv, X_t_y) # inverse(X'X)X'y
-        
         self.bias, self.weights = coef[0], coef[1:]
-    
-    def fit(self, X: ArrayLike, y: ArrayLike):
-        """
-        Fit Linear Regression model from the training dataset ([X], [y])
-        """
-        super().fit(X, y)
-        self.least_squares(X, y)
 
     def predict(self, X: ArrayLike):
         """
