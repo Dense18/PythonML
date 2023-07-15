@@ -49,7 +49,7 @@ class LinearRegression(SupervisedModel):
     
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Fit Linear Regression to training set ([X], [y])
+        Fit Linear Regression model from the training dataset ([X], [y])
         """
         super().fit(X, y)
         self.least_squares(X, y)
