@@ -20,7 +20,7 @@ class SupervisedModel(ABC):
     @abstractmethod
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Fit the model based on the training set ([X], [y])
+        Fit the model from the training dataset ([X], [y])
         """
         # self.validate_fit_args(X, y)
         check_X_y(X, y)
@@ -42,7 +42,7 @@ class UnSupervisedModel(ABC):
     @abstractmethod
     def fit(self, X: ArrayLike):
         """
-        Fit the model based on the training set [X]
+        Fit the model from the training dataset [X]
         """
         check_X(X)
         self.n_features_in = X.shape[1]
