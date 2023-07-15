@@ -63,6 +63,9 @@ class RandomForest(SupervisedModel):
     
     oob_score: float
         OOB score obased on the training seen during the :term:`fit`
+    
+    rng: Generator
+        RNG Generator used for randomness 
     """
     
     def __init__(self, 

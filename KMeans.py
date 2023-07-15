@@ -74,6 +74,9 @@ class KMeans(UnSupervisedModel):
     
     n_iter: int
         Number of iterations run performed
+    
+    rng: Generator
+        RNG Generator used for randomness 
     """
     
     def __init__(self, 
