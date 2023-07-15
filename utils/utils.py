@@ -4,6 +4,8 @@ from typing import Optional
 import numpy as np
 from numpy.typing import ArrayLike
 
+import utils.validation as valid
+
 
 def most_common_label(y: ArrayLike):
     """
@@ -64,3 +66,30 @@ def bootstrap_samples_with_oob(X: ArrayLike, y: ArrayLike, random_state: Optiona
     """
     idxs, oob_idxs = bootstrap_idxs_with_oob(X, random_state)
     return X[idxs], X[oob_idxs], y[idxs], y[oob_idxs]
+
+def batch_idxs(X: ArrayLike, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
+    """
+    Obtain [batch_size] samples indexes from [X]
+    
+    If batch_size is higher than n_rows of X, then n_rows of X will be used instead
+    """
+    if batch_size <= 0:
+        raise ValueError(f"Batch size should be greater than 0. Got a value of {batch_size} instead")
+    
+    rng = np.random.default_rng(random_state)
+    
+    n_samples = X.shape[0]
+    return rng.choice(n_samples, min(n_samples, batch_size), replace = False)
+
+def batch_samples(X: ArrayLike, y: ArrayLike, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
+    """
+    Obtain [batch_size] samples from ([X], [Y])
+    
+    If batch_size is higher than n_rows of X, then n_rows of X will be used instead
+    """
+    if batch_size <= 0:
+        raise ValueError(f"Batch size should be greater than 0. Got a value of {batch_size} instead")
+    valid.check_consistent_length(X, y)
+    
+    idxs = batch_idxs(X, batch_size, random_state = random_state)
+    return X[idxs], y[idxs]
