@@ -46,8 +46,9 @@ class KNeighborsClassifier(SupervisedModel):
                  dist_metric: str = "euclidean"
                  ):
         
-        self.validate(
+        self.validate_param(
             n_neighbors = n_neighbors,
+            dist_metric = dist_metric
         )
         
         self.X = None
@@ -56,7 +57,7 @@ class KNeighborsClassifier(SupervisedModel):
         
         self.dist_metric = dist_metric
         self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
-        self.dist_func = self.DIST_DICT.get(dist_metric, "euclidean")
+        self.dist_func = self.DIST_DICT[dist_metric]
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
@@ -87,9 +88,12 @@ class KNeighborsClassifier(SupervisedModel):
     ####### Validation ######
     
     
-    def validate(self, n_neighbors):
+    def validate_param(self, n_neighbors, dist_metric):
         """
         Validate provided arguments
         """
         if n_neighbors < 1:
            raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")
+       
+        if dist_metric not in ("euclidean", "manhattan"):
+            raise ValueError(f"Invalid [dist_metric] argument. Supported values are: {('euclidean', 'manhattan')}")

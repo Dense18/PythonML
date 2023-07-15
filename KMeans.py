@@ -91,10 +91,13 @@ class KMeans(UnSupervisedModel):
                  ):
 
         
-        self.validate(
+        self.validate_param(
             n_clusters = n_clusters,
+            init = init,
             n_init = n_init,
             max_iter = max_iter,
+            dist_metric = dist_metric,
+            random_state = random_state,
             tol = tol
         )
         
@@ -105,12 +108,12 @@ class KMeans(UnSupervisedModel):
         
         self.init = init
         self.INIT_DICT = {"random": self.randomize_centroids, "k++": self.k_plus_centroids}
-        self.init_func = self.INIT_DICT.get(init, "k++")
+        self.init_func = self.INIT_DICT[init]
         self.n_init = n_init
         
         self.dist_metric = dist_metric
         self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
-        self.dist_func = self.DIST_DICT.get(dist_metric, "euclidean")
+        self.dist_func = self.DIST_DICT[dist_metric]
         
         self.random_state = random_state
         self.rng = np.random.default_rng(random_state)
@@ -295,18 +298,27 @@ class KMeans(UnSupervisedModel):
     ###### Validation ######
     
     
-    def validate(self, n_clusters, max_iter, n_init, tol):
+    def validate_param(self, n_clusters, init, n_init, max_iter, dist_metric, random_state, tol):
         """
-        Validate provided arguments
+        Validate parameter arguments
         """
         if n_clusters < 1:
             raise ValueError(f"n_cluster should be greater than 0. Got a value of {n_clusters} instead.")
         
-        if max_iter < 1:
-            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iter} instead.")
+        if init not in ("random", "k++"):
+            raise ValueError(f"Invalid [init] argument. Supported values are: {('random', 'k++')}")
         
         if n_init < 1:
             raise ValueError(f"n_init should be greater than 0. Got a value of {n_init} instead.")
+        
+        if dist_metric not in ("euclidean", "manhattan"):
+            raise ValueError(f"Invalid [dist_metric] argument. Supported values are: {('euclidean', 'manhattan')}")
+        
+        if max_iter < 1:
+            raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iter} instead.")
+        
+        if isinstance(random_state, int) and random_state < 0:
+            raise ValueError(f"random_state integer value should be greater than 0. Got a value of {random_state} instead.")
         
         if tol < 0:
             raise ValueError(f"tol should be a positive number. Got a value of {tol} instead.")

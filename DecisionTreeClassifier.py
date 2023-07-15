@@ -49,7 +49,7 @@ class Node:
                  info_gain: float = None, 
                  *, 
                  value: Optional[int] = None
-                 ) -> None:
+                 ):
         #Decision Node
         self.feature_index = feature_index
         self.threshold = threshold
@@ -112,10 +112,11 @@ class DecisionTreeClassifier(SupervisedModel):
                  random_state: Optional[int | np.random.Generator] = None
                  ):
         
-        self.validate(
+        self.validate_param(
             min_samples_split = min_samples_split,
             max_depth = max_depth,
-            max_features = max_features
+            max_features = max_features,
+            random_state = random_state
         )
         
         self.X = None
@@ -295,12 +296,12 @@ class DecisionTreeClassifier(SupervisedModel):
         # return np.sum([-prob * np.log2(prob) for prob in prob_features])
     
            
-    ###### Validate ######
+    ###### Validation ######
 
     
-    def validate(self, min_samples_split, max_depth, max_features):
+    def validate_param(self, min_samples_split, max_depth, max_features, random_state):
         """
-        Validate provided arguments
+        Validate parameter arguments
         """
         
         if min_samples_split <= 1:
@@ -312,7 +313,10 @@ class DecisionTreeClassifier(SupervisedModel):
         if max_features is not None and max_features < 1:
             raise ValueError(f"max_features int value should be greater than 1. Got {max_features} instead.")  
     
-    
+        if isinstance(random_state, int) and random_state < 0:
+            raise ValueError(f"random_state integer value should be greater than 0. Got a value of {random_state} instead.")
+        
+        
     ###### Text presentation ######
     
     
