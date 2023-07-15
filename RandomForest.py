@@ -70,6 +70,7 @@ class RandomForest(SupervisedModel):
     
     def __init__(self, 
                  n_estimators: int = 10,
+                 *,
                  min_samples_split: int = 2,
                  max_depth: int = np.iinfo(np.int32).max,
                  max_features: Optional[int] = None,
@@ -142,3 +143,35 @@ class RandomForest(SupervisedModel):
         tree_preds = np.array([tree.predict(X) for tree in self.trees])
         tree_preds = tree_preds.T
         return np.array([most_common_label(pred) for pred in tree_preds])
+    
+    
+    ####### Validation #######
+    
+    
+    def validate_param(self, 
+                n_estimators: int = 10,
+                min_samples_split: int = 2,
+                max_depth: int = np.iinfo(np.int32).max,
+                max_features: Optional[int] = None,
+                bootstrap: bool = True,
+                compute_oob: bool = True,
+                random_state: Optional[int | np.random.Generator] = None
+                ):
+        """
+        Validate parameter arguments
+        """
+        if n_estimators <= 0:
+            raise ValueError(f"n_estimators be greater than 0. Got {n_estimators} instead.")
+        
+        if min_samples_split <= 1:
+            raise ValueError(f"min_samples_split should be greater than 2. Got {min_samples_split} instead.")
+        
+        if max_depth < 0:
+            raise ValueError(f"min_samples_split should be positive. Got {max_depth} instead.")
+        
+        if max_features is not None and max_features < 1:
+            raise ValueError(f"max_features int value should be greater than 1. Got {max_features} instead.")  
+
+        if isinstance(random_state, int) and random_state < 0:
+            raise ValueError(f"random_state integer value should be greater than 0. Got a value of {random_state} instead.")
+        
