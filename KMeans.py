@@ -164,7 +164,7 @@ class KMeans(UnSupervisedModel):
     
     def fit(self, X: ArrayLike, plot = False):
         """
-        Fit the model based on the training set [X] 
+        Fit model using k-means clustering from the training dataset ([X], [y])
         """
         super().fit(X)
         self.X = X  

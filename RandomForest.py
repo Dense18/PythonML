@@ -93,7 +93,7 @@ class RandomForest(SupervisedModel):
     
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Build a decision tree classifier from the training set ([X],[y]) 
+        Builds a random forest classifier from the training dataset ([X],[y]) 
         """
         super().fit(X, y)
         self.n_features_in = X.shape[0]

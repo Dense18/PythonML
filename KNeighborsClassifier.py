@@ -60,7 +60,7 @@ class KNeighborsClassifier(SupervisedModel):
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
-        Fit the model based on the training set ([X], [y])
+        Fit KNN classifer from the training dataset ([X], [y])
         """
         super().fit(X, y)  
         self.X, self.y = X, y
