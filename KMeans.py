@@ -101,13 +101,13 @@ class KMeans(UnSupervisedModel):
         self.max_iter = max_iter
         
         self.init = init
-        self.init_dict = {"random": self.randomize_centroids, "k++": self.k_plus_centroids}
-        self.init_func = self.init_dict.get(init, "k++")
+        self.INIT_DICT = {"random": self.randomize_centroids, "k++": self.k_plus_centroids}
+        self.init_func = self.INIT_DICT.get(init, "k++")
         self.n_init = n_init
         
         self.dist_metric = dist_metric
-        self.dist_dict = {"euclidean": euclidean, "manhattan": manhattan}
-        self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
+        self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
+        self.dist_func = self.DIST_DICT.get(dist_metric, "euclidean")
         
         self.random_state = random_state
         self.rng = np.random.default_rng(random_state)
@@ -205,7 +205,7 @@ class KMeans(UnSupervisedModel):
         
         Same as calling self.init_func
         """
-        return self.init_dict[self.init]
+        return self.INIT_DICT[self.init]
     
     def randomize_centroids(self):
         """

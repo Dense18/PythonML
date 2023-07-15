@@ -55,8 +55,8 @@ class KNeighborsClassifier(SupervisedModel):
         self.n_neighbors = n_neighbors
         
         self.dist_metric = dist_metric
-        self.dist_dict = {"euclidean": euclidean, "manhattan": manhattan}
-        self.dist_func = self.dist_dict.get(dist_metric, "euclidean")
+        self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
+        self.dist_func = self.DIST_DICT.get(dist_metric, "euclidean")
        
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
