@@ -86,8 +86,8 @@ class KMeans(UnSupervisedModel):
                  n_init = 1,
                  max_iter: int = 1,
                  dist_metric: str = "euclidean",
+                 tol: float = 1e-4,
                  random_state: Optional[int | np.random.Generator] = None,
-                 tol: float = 1e-4
                  ):
 
         
@@ -97,8 +97,8 @@ class KMeans(UnSupervisedModel):
             n_init = n_init,
             max_iter = max_iter,
             dist_metric = dist_metric,
+            tol = tol,
             random_state = random_state,
-            tol = tol
         )
         
         self.X = None
@@ -298,7 +298,7 @@ class KMeans(UnSupervisedModel):
     ###### Validation ######
     
     
-    def validate_param(self, n_clusters, init, n_init, max_iter, dist_metric, random_state, tol):
+    def validate_param(self, n_clusters, init, n_init, max_iter, dist_metric, tol, random_state):
         """
         Validate parameter arguments
         """
@@ -317,8 +317,8 @@ class KMeans(UnSupervisedModel):
         if max_iter < 1:
             raise ValueError(f"max_iterations should be greater than 0. Got a value of {max_iter} instead.")
         
-        if isinstance(random_state, int) and random_state < 0:
-            raise ValueError(f"random_state integer value should be greater than 0. Got a value of {random_state} instead.")
-        
         if tol < 0:
             raise ValueError(f"tol should be a positive number. Got a value of {tol} instead.")
+        
+        if isinstance(random_state, int) and random_state < 0:
+            raise ValueError(f"random_state integer value should be greater than 0. Got a value of {random_state} instead.")
