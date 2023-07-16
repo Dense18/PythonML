@@ -91,12 +91,6 @@ class DecisionTreeClassifier(SupervisedModel):
         ----------
         All variables in [Parameters]
         
-        X: Array
-            Independent variables on the training dataset
-        
-        Y: Array
-            Dependent variable on the training dataset
-        
         max_features_: int
             Inferred value of max features
         
@@ -118,9 +112,6 @@ class DecisionTreeClassifier(SupervisedModel):
             max_features = max_features,
             random_state = random_state
         )
-        
-        self.X = None
-        self.y = None
         
         self.root = None
         
@@ -243,7 +234,7 @@ class DecisionTreeClassifier(SupervisedModel):
         Return the unique threshold value of [feature_data]
         """
         ## if it is categorical
-        # if np.dtype.type in (np.string_, np.object_): # 
+        # if np.dtype.type in (np.string_, np.object_): 
         #     return np.unique(feature_data)
         
         ## if it is numerical
