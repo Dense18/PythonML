@@ -1,20 +1,25 @@
+import functools
+import logging
 import time
-import numpy as np
-from scipy import stats as st
 from collections import Counter
 
-def split(X_column, split_thresh):
-    left_idxs = np.array([i for i, row in enumerate(X_column) if row <= split_thresh])
-    right_idxs = np.array([i for i, row in enumerate(X_column) if row > split_thresh])
-    return left_idxs, right_idxs
+import numpy as np
+from scipy import stats as st
 
-def split2(X_column, split_thresh):
-    left_idxs = np.argwhere(X_column <= split_thresh).flatten()
-    right_idxs = np.argwhere(X_column > split_thresh).flatten()
-    return left_idxs, right_idxs
+logger = logging.getLogger("mytest")
 
-## Wrapper function
+def with_logging(func):
+    @functools.wraps(func)
+    def inner_func(*args, **kwargs):
+        logger.info(f"Calling {func.__name__}")
+        output = func(*args, **kwargs)
+        logger.info(f"Finished calling {func.__name__}")
+        return output
+    return inner_func
+
+
 def timer(func):
+    @functools.wraps(func)
     def inner_func(*args, **kwargs):
         start = time.time()
         func(*args, **kwargs)
@@ -22,34 +27,56 @@ def timer(func):
         print(f"Time taken: {time_taken}")
     return inner_func
 
-## Wrapper function
-def timer_repeat(func):
-    pass
 
-x_column = np.random.randint(1, 10000, (1000))
+def timer_repeat(repeat):
+    def decorator(func):
+        @functools.wraps(func)
+        def inner_func(*args, **kwargs):
+            start = time.time()
+            for _ in range(repeat):
+                func(*args, **kwargs)
+            time_taken = time.time() - start
+            logger.info(f"Time taken for {repeat} operations: {time_taken}")
+        return inner_func
+    return decorator
+    
 
-a_f = lambda y: y + 3
-func = lambda x: a_f(x)
+def timer_repeat_by_calling_timer(repeat):
+    def decorator(func):#func = add
+        def inside(*args, **kwargs):
+            for _ in range(repeat):
+                timer(func)(*args, **kwargs)
+            logger.info(f"Executed {repeat} times")
+        return inside
+    
+    return decorator
+    
+def timer_for_partial(func, repeat: int):
+    @functools.wraps(func)
+    def inner_func(*args, **kwargs):
+        start = time.time()
+        for _ in range(repeat):
+            func(*args, **kwargs)
+        time_taken = time.time() - start
+        logger.info(f"Time taken for {repeat} operations: {time_taken}")
+    return inner_func
+
+timer_with_default = functools.partial(timer_for_partial, repeat = 1)
 
 
-vec_func = np.vectorize(func)
-start = time.time()
-l = []
-for i in range(10000):
-    uni = set(x_column)
-    aa = np.array([i for i in range(10000) if i not in uni])
-time_takem = time.time() - start
-print(f"first using Counter: {time_takem}")
+@with_logging
+@timer_with_default
+def add(x, y):
+    return x + y
 
+def main():
+    logging.basicConfig(level=logging.INFO)
+    value = add(1,2)
+    # for i in range(12):
+    #     add(1,2)
+    
+    
+if __name__ == "__main__":
+    main()
 
-
-start = time.time()
-
-for i in range(10000):
-    x2_column = np.arange(10000)
-    bb = np.setdiff1d(x2_column, x_column)
-time_takem = time.time() - start
-print(f"first using  scipy: {time_takem}")
-
-print()
-print(len(aa) == len(bb) and all(aa == bb))
+# x_column = np.random.randint(1, 10000, (1000))
