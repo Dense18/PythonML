@@ -1,3 +1,5 @@
+""" Module for K neighbors classifier models"""
+
 import numpy as np
 from numpy.typing import ArrayLike
 from sklearn.utils.validation import NotFittedError
@@ -39,26 +41,26 @@ class KNeighborsClassifier(SupervisedModel):
     dist_func:
         Distance Function based on [dist_metric] value
     """
-    
+
     def __init__(self, 
                  n_neighbors: int = 5, 
                  *,
                  dist_metric: str = "euclidean"
                  ):
-        
+        super().__init__()
         self.validate_param(
             n_neighbors = n_neighbors,
             dist_metric = dist_metric
         )
-        
+
         self.X = None
         self.y = None
         self.n_neighbors = n_neighbors
-        
+     
         self.dist_metric = dist_metric
         self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
         self.dist_func = self.DIST_DICT[dist_metric]
-       
+ 
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fit KNN classifer from the training dataset ([X], [y])
@@ -66,7 +68,7 @@ class KNeighborsClassifier(SupervisedModel):
         super().fit(X, y)  
         self.X, self.y = X, y
         self.n_features_in = X.shape[1]
-    
+
     def _predict(self, x: ArrayLike):
         """
         Predict class value for instance [x]
@@ -83,17 +85,17 @@ class KNeighborsClassifier(SupervisedModel):
         if self.X is None:
             raise NotFittedError("Classifier has not beed fiited yet!")
         return np.array([self._predict(x) for x in X])
-    
-    
+
+
     ####### Validation ######
-    
-    
+
+
     def validate_param(self, n_neighbors, dist_metric):
         """
         Validate provided arguments
         """
         if n_neighbors < 1:
-           raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")
-       
+            raise ValueError(f"n_neighbors should be greater than 0. Got {n_neighbors} instead.")
+
         if dist_metric not in ("euclidean", "manhattan"):
             raise ValueError(f"Invalid [dist_metric] argument. Supported values are: {('euclidean', 'manhattan')}")

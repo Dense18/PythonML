@@ -1,17 +1,15 @@
-from typing import Optional
+""" Module for Linear Regression models"""
 
 import numpy as np
 from numpy.typing import ArrayLike
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
-from utils.metrics import mse
-from utils.utils import batch_samples
 
 
 class LinearRegression(SupervisedModel):
     """
-    Linear regression model using gradient descent
+    Linear regression model using Ordinary Least Squares method
     
     Parameters
     ----------
@@ -26,10 +24,14 @@ class LinearRegression(SupervisedModel):
     bias:
         The intercept value
     """
-    
+
     def __init__(self, *, fit_intercept: bool = True):
+        super().__init__()
         self.fit_intercept = fit_intercept
-    
+
+        self.weights = None
+        self.bias = None
+
     def fit(self, X: ArrayLike, y: ArrayLike):
         """
         Fit Linear Regression using Ordinary Least Squares 
@@ -49,12 +51,12 @@ class LinearRegression(SupervisedModel):
         # Formula used: coef = inverse(X'X)X'y
         # Based on https://online.stat.psu.edu/stat462/node/132/
         super().fit(X, y)
-        
+
         copy_X = X.copy()
-        
+
         if self.fit_intercept:
             copy_X = np.c_[np.ones(X.shape[0]), copy_X]
-        
+
         try:
             inv = np.linalg.inv(np.dot(copy_X.T, copy_X)) # inverse(X'X)
         except Exception as err:
@@ -74,6 +76,3 @@ class LinearRegression(SupervisedModel):
         if self.weights is None:
             raise NotFittedError("Linear Regression model has not beed fitted yet!")
         return np.dot(X, self.weights) + self.bias
-    
-    
-    
