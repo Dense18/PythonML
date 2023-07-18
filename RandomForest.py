@@ -2,7 +2,7 @@
 from typing import Optional
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
 from DecisionTreeClassifier import DecisionTreeClassifier
@@ -96,7 +96,7 @@ class RandomForest(SupervisedModel):
 
         self.oob_score = None
 
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Builds a random forest classifier from the training dataset ([X],[y]) 
         """
@@ -134,7 +134,7 @@ class RandomForest(SupervisedModel):
         if self.compute_oob and self.bootstrap:
             self.oob_score = total_oob_err / self.n_estimators
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class value for [X]
         """

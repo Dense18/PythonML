@@ -2,7 +2,7 @@
 from typing import Callable, Optional
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
@@ -108,7 +108,7 @@ class SGDRegression(SupervisedModel):
         self.bias = 0
         self.n_iter = 0
 
-    def gradient_descent(self, X: ArrayLike, y: ArrayLike):
+    def gradient_descent(self, X: NDArray, y: NDArray):
         """
         Fit Gradient Descent Regression from the training dataset ([X], [y])
         """
@@ -155,14 +155,14 @@ class SGDRegression(SupervisedModel):
     def time_decay(self, epoch, init_learning):
         return init_learning / (1 + self.decay * epoch)
 
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Fit model using gradient descent from the training dataset ([X], y)
         """
         super().fit(X, y)
         self.gradient_descent(X, y)
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict regression value for [X]
         """

@@ -1,5 +1,6 @@
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
+
 
 def check_consistent_length(*arrays):
     """
@@ -12,7 +13,7 @@ def check_consistent_length(*arrays):
             f"Inconsistent number of samples found: {[l for l in lengths]}"
         )
 
-def check_array(arr: ArrayLike, 
+def check_array(arr: NDArray, 
                 *, 
                 all_finite: bool = True,
                 ensure_2d: bool = True,
@@ -59,7 +60,7 @@ def check_X_y(X,
     check_y(y)
     check_consistent_length(X, y)
 
-def check_X(X: ArrayLike, 
+def check_X(X: NDArray, 
             *, 
             all_finite: bool = True,
             ):
@@ -75,7 +76,7 @@ def check_X(X: ArrayLike,
         min_features = 1,
     )
     
-def check_y(y: ArrayLike):
+def check_y(y: NDArray):
     """
     Validate [y] array input.
     """
@@ -89,7 +90,7 @@ def check_y(y: ArrayLike):
     )
     
 
-def assert_all_finite(arr: ArrayLike, allow_inf: bool = False, allow_nan: bool = False):
+def assert_all_finite(arr: NDArray, allow_inf: bool = False, allow_nan: bool = False):
     """
     Assert that all values of the array are finite. Throws ValueError otherwise.
     """

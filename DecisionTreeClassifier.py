@@ -2,7 +2,7 @@ import math
 from typing import Optional, Self
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
@@ -124,7 +124,7 @@ class DecisionTreeClassifier(SupervisedModel):
 
         self.max_features_ = None
 
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Build a decision tree classifier from the training set ([X],[y]) 
         """
@@ -133,7 +133,7 @@ class DecisionTreeClassifier(SupervisedModel):
         self.max_features_ = self.n_features_in if self.max_features is None else self.max_features
         self.root = self.build_tree(X, y)
 
-    def traverse(self, instance: ArrayLike, node: Node):
+    def traverse(self, instance: NDArray, node: Node):
         """
         Traverse down the tree based on the [node] and returns the class value 
         """
@@ -142,7 +142,7 @@ class DecisionTreeClassifier(SupervisedModel):
         return self.traverse(instance, node.left) if instance[node.feature_index] <= node.threshold \
             else self.traverse(instance, node.right)
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class value for [X]
         """
@@ -154,7 +154,7 @@ class DecisionTreeClassifier(SupervisedModel):
     ###### Tree building ######
 
 
-    def build_tree(self, X: ArrayLike, y: ArrayLike, cur_depth = 0) -> Node:
+    def build_tree(self, X: NDArray, y: NDArray, cur_depth = 0) -> Node:
         """
         Build the decision tree
         """
@@ -174,7 +174,7 @@ class DecisionTreeClassifier(SupervisedModel):
         leaf_value = most_common_label(y)
         return Node(value = leaf_value)
 
-    def split(self, feature_data: ArrayLike, threshold):
+    def split(self, feature_data: NDArray, threshold):
         """
         Return the left and right indexes of [feature_data] after a split based on the [threshold] 
         """
@@ -187,7 +187,7 @@ class DecisionTreeClassifier(SupervisedModel):
         right_idxs = np.argwhere(feature_data > threshold).flatten()
         return left_idxs, right_idxs
 
-    def best_split(self, X: ArrayLike, y: ArrayLike, num_features: int):
+    def best_split(self, X: NDArray, y: NDArray, num_features: int):
         """
         Return the best split information based on the dataset ([X], [Y]) with random subset of [num_features] chosen
 
@@ -229,7 +229,7 @@ class DecisionTreeClassifier(SupervisedModel):
 
         return split_index, split_threshold, max_gain, best_left_idx, best_right_idx
 
-    def get_thresholds(self, feature_data: ArrayLike):
+    def get_thresholds(self, feature_data: NDArray):
         """
         Return the unique threshold value of [feature_data]
         """
@@ -246,7 +246,7 @@ class DecisionTreeClassifier(SupervisedModel):
     ###### Calculation ######
 
 
-    def info_gain(self, parent_y: ArrayLike, left_y: ArrayLike, right_y: ArrayLike) -> float:
+    def info_gain(self, parent_y: NDArray, left_y: NDArray, right_y: NDArray) -> float:
         """
         Compute the information gain value
         """
@@ -258,7 +258,7 @@ class DecisionTreeClassifier(SupervisedModel):
         return parent_entropy - (w_left * left_entropy + w_right * right_entropy)
 
     def info_gain_with_parent_entropy(self, parent_entropy: float, n_parent: int,
-                                      left_y: ArrayLike, right_y: ArrayLike) -> float:
+                                      left_y: NDArray, right_y: NDArray) -> float:
         """
         Compute the information gain value given [parent_entropy] value and parent size [n_parent]
         Much more efficient than info_gain(...) counterpart
@@ -270,7 +270,7 @@ class DecisionTreeClassifier(SupervisedModel):
         left_entropy, right_entropy = self.entropy(left_y), self.entropy(right_y)
         return parent_entropy -(w_left * left_entropy + w_right * right_entropy)
 
-    def entropy(self, y: ArrayLike):
+    def entropy(self, y: NDArray):
         """
         Compute entropy value from [y]
         """

@@ -2,7 +2,8 @@
 
 from abc import ABC, abstractmethod
 
-from numpy.typing import ArrayLike
+import numpy as np
+from numpy.typing import NDArray
 
 from utils.validation import check_X, check_X_y
 
@@ -17,14 +18,14 @@ class SupervisedModel(ABC):
         self.n_features_in = 0
 
     @abstractmethod
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class/regression value for [X]
         """
         raise NotImplementedError
 
     @abstractmethod
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Fit the model from the training dataset ([X], [y])
         """
@@ -43,14 +44,14 @@ class UnSupervisedModel(ABC):
         self.n_features_in = 0
 
     @abstractmethod
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class/regression value for [X]
         """
         raise NotImplementedError
 
     @abstractmethod
-    def fit(self, X: ArrayLike):
+    def fit(self, X: NDArray):
         """
         Fit the model from the training dataset [X]
         """

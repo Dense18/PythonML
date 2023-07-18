@@ -4,7 +4,7 @@ from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.decomposition import PCA
 from sklearn.utils.validation import NotFittedError
 
@@ -126,7 +126,7 @@ class KMeans(UnSupervisedModel):
 
         self.n_iter = 0
 
-    def _fit(self, X: ArrayLike, plot = False):
+    def _fit(self, X: NDArray, plot = False):
         """
         Helper function to perform Kmeans once
 
@@ -168,7 +168,7 @@ class KMeans(UnSupervisedModel):
 
         return n_iter, centroids, cluster_num, self.calc_inertia(X, cluster_num, centroids)
 
-    def fit(self, X: ArrayLike, plot = False):
+    def fit(self, X: NDArray, plot = False):
         """
         Fit model using k-means clustering from the training dataset ([X], [y])
         """
@@ -186,14 +186,14 @@ class KMeans(UnSupervisedModel):
 
         self.n_iter, self.centroids, self.labels, self.inertia = best_fit_return
 
-    def _predict(self, x: ArrayLike):
+    def _predict(self, x: NDArray):
         """
         Predict class value for instance [X]
         """
         dists = self.get_distances_oneD(x, self.centroids)
         return np.argmin(dists)
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class value for [X]
         """
@@ -246,7 +246,7 @@ class KMeans(UnSupervisedModel):
     ###### Calculations ######
 
 
-    def get_distances(self, X: ArrayLike, centroids: ArrayLike):
+    def get_distances(self, X: NDArray, centroids: NDArray):
         """
         Return distances between [X] and [centroids]
 
@@ -259,7 +259,7 @@ class KMeans(UnSupervisedModel):
             dist[:, i] = self.dist_func(X, centroids[i], axis = 1)
         return dist
 
-    def get_distances_oneD(self, x: ArrayLike, centroids: ArrayLike):
+    def get_distances_oneD(self, x: NDArray, centroids: NDArray):
         """
         Return distances between instance [X] and [centroids]
 
@@ -267,7 +267,7 @@ class KMeans(UnSupervisedModel):
         """
         return np.array([self.dist_func(x, centroids[i]) for i in range(len(centroids))])
 
-    def calc_inertia(self, X: ArrayLike, labels: ArrayLike, centroids: ArrayLike):
+    def calc_inertia(self, X: NDArray, labels: NDArray, centroids: NDArray):
         """
         Calculate intertia, i.e, the WSS value
         """
@@ -277,7 +277,7 @@ class KMeans(UnSupervisedModel):
     ###### Plot ######
 
 
-    def plot_clusters(self, labels: ArrayLike, centroids: ArrayLike, iteration: int):
+    def plot_clusters(self, labels: NDArray, centroids: NDArray, iteration: int):
         """
         Plot a 2D kmeans graph after applying PCA on the current [iteration].
 

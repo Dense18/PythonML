@@ -1,7 +1,7 @@
 """ Module for Linear Regression models"""
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
@@ -32,7 +32,7 @@ class LinearRegression(SupervisedModel):
         self.weights = None
         self.bias = None
 
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Fit Linear Regression using Ordinary Least Squares 
         
@@ -69,7 +69,7 @@ class LinearRegression(SupervisedModel):
         coef = np.dot(inv, X_t_y) # inverse(X'X)X'y
         self.bias, self.weights = coef[0], coef[1:]
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict regression value from [X]
         """

@@ -1,7 +1,7 @@
 """ Module for K neighbors classifier models"""
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
 from Model import SupervisedModel
@@ -61,7 +61,7 @@ class KNeighborsClassifier(SupervisedModel):
         self.DIST_DICT = {"euclidean": euclidean, "manhattan": manhattan}
         self.dist_func = self.DIST_DICT[dist_metric]
  
-    def fit(self, X: ArrayLike, y: ArrayLike):
+    def fit(self, X: NDArray, y: NDArray):
         """
         Fit KNN classifer from the training dataset ([X], [y])
         """
@@ -69,7 +69,7 @@ class KNeighborsClassifier(SupervisedModel):
         self.X, self.y = X, y
         self.n_features_in = X.shape[1]
 
-    def _predict(self, x: ArrayLike):
+    def _predict(self, x: NDArray):
         """
         Predict class value for instance [x]
         """
@@ -78,7 +78,7 @@ class KNeighborsClassifier(SupervisedModel):
         y_values = self.y[sorted_indexs]
         return most_common_label(y_values)
 
-    def predict(self, X: ArrayLike):
+    def predict(self, X: NDArray):
         """
         Predict class value for [X]
         """

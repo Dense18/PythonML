@@ -1,26 +1,26 @@
 from typing import Optional
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 
 from utils.validation import check_consistent_length
 
 
-def euclidean(x1: ArrayLike, x2: ArrayLike, axis: Optional[int | tuple[int]] = None) -> float:
+def euclidean(x1: NDArray, x2: NDArray, axis: Optional[int | tuple[int]] = None) -> float:
     """
     Calculate the euclidean distance between [X1] and [X2] along the [axis]
     where axis is perform during the summation 
     """
     return np.sqrt(np.sum((x1 - x2) ** 2, axis=axis))
 
-def manhattan(x1: ArrayLike, x2: ArrayLike, axis: Optional[int | tuple[int]] = None):
+def manhattan(x1: NDArray, x2: NDArray, axis: Optional[int | tuple[int]] = None):
     """
     Calculate the euclidean distance between [X1] and [X2] along the [axis]
     where axis is perform during the summation 
     """
     return np.absolute(np.sum((x1 - x2), axis=axis))
 
-def accuracy_score(y_test: ArrayLike, y_pred: ArrayLike, normalize: bool = True):
+def accuracy_score(y_test: NDArray, y_pred: NDArray, normalize: bool = True):
     """
     Return the accuracy classification score
     
@@ -30,7 +30,7 @@ def accuracy_score(y_test: ArrayLike, y_pred: ArrayLike, normalize: bool = True)
     score = y_test == y_pred
     return np.average(score) if normalize else score
 
-def mse(y_test: ArrayLike, y_pred: ArrayLike, squared: bool = True) -> float:
+def mse(y_test: NDArray, y_pred: NDArray, squared: bool = True) -> float:
     """
     Calculates Mean Squared Error value
     
@@ -51,7 +51,7 @@ def mse(y_test: ArrayLike, y_pred: ArrayLike, squared: bool = True) -> float:
     
     return err
 
-def rmse(y_test: ArrayLike, y_pred: ArrayLike) -> float:
+def rmse(y_test: NDArray, y_pred: NDArray) -> float:
     """
     Calculates Root Mean Squared Error value
     

@@ -2,12 +2,12 @@ from collections import Counter
 from typing import Optional
 
 import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 
 import utils.validation as valid
 
 
-def most_common_label(y: ArrayLike):
+def most_common_label(y: NDArray):
     """
     Return the most common label from feature [y]
     """
@@ -15,7 +15,7 @@ def most_common_label(y: ArrayLike):
     # return st.mode(y, keepdims = False).mode # Much Faster than Counter if y is a numpy array, otherwise slower
     # return np.bincount(y).argmax() # Fastest, best with numpy array. only works if y is an array of integers with values that aren't large 
 
-def bootstrap_idxs(X: ArrayLike, random_state: Optional[int | np.random.Generator] = None):
+def bootstrap_idxs(X: NDArray, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain bootstrap indexes samples from dataset [X]
     
@@ -28,7 +28,7 @@ def bootstrap_idxs(X: ArrayLike, random_state: Optional[int | np.random.Generato
     idxs = rng.choice(n_samples, n_samples, replace = True)
     return idxs
 
-def bootstrap_idxs_with_oob(X: ArrayLike, random_state: Optional[int | np.random.Generator] = None):
+def bootstrap_idxs_with_oob(X: NDArray, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain bootstrap indexes samples from dataset [X] with OOB indexes
     
@@ -41,7 +41,7 @@ def bootstrap_idxs_with_oob(X: ArrayLike, random_state: Optional[int | np.random
     return idxs, oob_idxs
 
 
-def bootstrap_samples(X: ArrayLike, y: ArrayLike, random_state: Optional[int | np.random.Generator] = None):
+def bootstrap_samples(X: NDArray, y: NDArray, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain bootstrap samples from dataset ([X], y)
     
@@ -54,7 +54,7 @@ def bootstrap_samples(X: ArrayLike, y: ArrayLike, random_state: Optional[int | n
     idxs = bootstrap_idxs(X, random_state)
     return X[idxs], y[idxs]
     
-def bootstrap_samples_with_oob(X: ArrayLike, y: ArrayLike, random_state: Optional[int | np.random.Generator] = None):
+def bootstrap_samples_with_oob(X: NDArray, y: NDArray, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain bootstrap samples from dataset ([X], y) with oob samples
     
@@ -67,7 +67,7 @@ def bootstrap_samples_with_oob(X: ArrayLike, y: ArrayLike, random_state: Optiona
     idxs, oob_idxs = bootstrap_idxs_with_oob(X, random_state)
     return X[idxs], X[oob_idxs], y[idxs], y[oob_idxs]
 
-def batch_idxs(X: ArrayLike, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
+def batch_idxs(X: NDArray, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain [batch_size] samples indexes from [X]
     
@@ -81,7 +81,7 @@ def batch_idxs(X: ArrayLike, batch_size: int, random_state: Optional[int | np.ra
     n_samples = X.shape[0]
     return rng.choice(n_samples, min(n_samples, batch_size), replace = False)
 
-def batch_samples(X: ArrayLike, y: ArrayLike, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
+def batch_samples(X: NDArray, y: NDArray, batch_size: int, random_state: Optional[int | np.random.Generator] = None):
     """
     Obtain [batch_size] samples from ([X], [Y])
     
