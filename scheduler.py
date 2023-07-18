@@ -1,5 +1,5 @@
 """
-    Module consisting of Learning rate scheduler functions used for Gradient Descent
+    Module consisting of scheduler learning rate functions used for Gradient Descent
 """
 import numpy as np
 
