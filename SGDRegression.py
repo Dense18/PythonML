@@ -153,6 +153,9 @@ class SGDRegression(SupervisedModel):
         self.bias = bias
 
     def time_decay(self, epoch: int, init_learning: float):
+        """
+        Scheduler function to adjust learning rate
+        """
         return init_learning / (1 + self.decay * epoch)
 
     def fit(self, X: NDArray, y: NDArray):

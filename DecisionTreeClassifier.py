@@ -105,7 +105,7 @@ class DecisionTreeClassifier(SupervisedModel):
                  max_features: Optional[int] = None,
                  random_state: Optional[int | np.random.Generator] = None
                  ):
-
+        super().__init__()
         self.validate_param(
             min_samples_split = min_samples_split,
             max_depth = max_depth,

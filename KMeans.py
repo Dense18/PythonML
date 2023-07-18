@@ -190,7 +190,7 @@ class KMeans(UnSupervisedModel):
         """
         Predict class value for instance [X]
         """
-        dists = self.get_distances_oneD(x, self.centroids)
+        dists = self.get_distances_one_d(x, self.centroids)
         return np.argmin(dists)
 
     def predict(self, X: NDArray):
@@ -259,7 +259,7 @@ class KMeans(UnSupervisedModel):
             dist[:, i] = self.dist_func(X, centroids[i], axis = 1)
         return dist
 
-    def get_distances_oneD(self, x: NDArray, centroids: NDArray):
+    def get_distances_one_d(self, x: NDArray, centroids: NDArray):
         """
         Return distances between instance [X] and [centroids]
 
