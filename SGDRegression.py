@@ -152,7 +152,7 @@ class SGDRegression(SupervisedModel):
         self.weights = weights
         self.bias = bias
 
-    def time_decay(self, epoch, init_learning):
+    def time_decay(self, epoch: int, init_learning: float):
         return init_learning / (1 + self.decay * epoch)
 
     def fit(self, X: NDArray, y: NDArray):
