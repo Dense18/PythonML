@@ -5,8 +5,8 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
-from DecisionTreeClassifier import DecisionTreeClassifier
-from Model import SupervisedModel
+from models.Model import SupervisedModel
+from models.tree.DecisionTreeClassifier import DecisionTreeClassifier
 from utils.metrics import accuracy_score
 from utils.utils import (bootstrap_samples, bootstrap_samples_with_oob,
                          most_common_label)

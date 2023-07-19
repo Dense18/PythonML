@@ -8,7 +8,7 @@ from numpy.typing import NDArray
 from sklearn.decomposition import PCA
 from sklearn.utils.validation import NotFittedError
 
-from Model import UnSupervisedModel
+from models.Model import UnSupervisedModel
 from utils.metrics import euclidean, manhattan
 
 

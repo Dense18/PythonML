@@ -5,7 +5,7 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.utils.validation import NotFittedError
 
-from Model import SupervisedModel
+from models.Model import SupervisedModel
 from utils.metrics import mse
 from utils.utils import batch_samples
 
