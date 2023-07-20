@@ -71,7 +71,7 @@ class SGDRegression(SupervisedModel):
     def __init__(self,
                  *,
                  algo: str = "sgd",
-                 init_learning: float = 0.01,
+                 init_learning: float = 0.1,
                  scheduler_func: Callable[[int], float] = None,
                  decay: float = 0,
                  tol: float = 1e-4,
@@ -189,7 +189,7 @@ class SGDRegression(SupervisedModel):
                  random_state
                  ):
 
-        if algo not in ("gd", "sdg"):
+        if algo not in ("gd", "sgd"):
             raise ValueError(f"Invalid [algo] value. Suppored Values are: 'gd', 'sgd'")
 
         if tol < 0:

@@ -178,11 +178,6 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Return the left and right indexes of [feature_data] after a split based on the [threshold] 
         """
-        ## Categorial variable
-        # left_idxs = np.argwhere(feature_data == split_thresh).flatten()
-        # right_idxs = np.argwhere(feature_data != split_thresh).flatten()
-
-        ## Continuous variable
         left_idxs = np.argwhere(feature_data <= threshold).flatten()
         right_idxs = np.argwhere(feature_data > threshold).flatten()
         return left_idxs, right_idxs
@@ -233,11 +228,6 @@ class DecisionTreeClassifier(SupervisedModel):
         """
         Return the unique threshold value of [feature_data]
         """
-        ## if it is categorical
-        # if np.dtype.type in (np.string_, np.object_):
-        #     return np.unique(feature_data)
-
-        ## if it is numerical
         sorted_col = np.sort(feature_data)
         avg_arr = (sorted_col[1:] + sorted_col[:-1]) / 2
         return avg_arr
