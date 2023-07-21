@@ -47,6 +47,7 @@ accuracy_score(y_test, y_pred)
 # >>> 0.9298245614035088
 ```
 
+More examples can be found here: [usage folder](usage)
 # Note
 The main purpose of this project is to :
 - understand how various machine learning models works under the hood
